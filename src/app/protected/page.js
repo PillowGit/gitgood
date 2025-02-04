@@ -16,7 +16,7 @@ export default function Protected() {
 
   return (
     <div>
-      <button onClick={() => signIn()}>Sign In</button>
+      <button onClick={() => signIn("github")}>Sign In</button>
     </div>
   );
 }
