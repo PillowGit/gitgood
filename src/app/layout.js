@@ -1,8 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
-import Providers from "./Providers"; // Import the client component
+import { authOptions } from "@/lib/auth"; 
+import Providers from "@/components/Providers"; // Import client component
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
