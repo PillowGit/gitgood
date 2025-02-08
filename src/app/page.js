@@ -5,12 +5,12 @@ export default function Home() {
     <>
       <title>GitGood</title>
       <div className="w-screen min-h-[70vh] bg-[#131313] flex justify-center items-center flex-col">
-        <p className="font-[#F7F7F2] font-bold text-3xl">
+        <p className="text-[#F7F7F2] font-bold text-3xl">
           GitGood.cc in development
         </p>
         <a
           href="https://github.com/PillowGit/gitgood"
-          className="font-[#F7F7F2] font-bold text-xl mt-8 underline transition hover:font-[#C4C4C2] hover:scale-105"
+          className="text-[#F7F7F2] font-bold text-xl mt-8 underline transition hover:text-[#C4C4C2] hover:scale-105"
         >
           github.com/PillowGit/gitgood
         </a>

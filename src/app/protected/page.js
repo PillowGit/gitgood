@@ -62,13 +62,13 @@ export default function Protected() {
 
         {/* Going to be an input field to update sample_text */}
         <div className="flex flex-col items-center justify-center rounded-lg m-4">
-          <div className="text-2xl">
+          <div className="text-[#F7F7F2] text-2xl">
             The following text is <span className="text-bold">persistent</span>{" "}
             (shoutout firebase):
           </div>
           <div className="flex flex-row align-center">
             <input
-              className="w-96 h-12 text-2xl rounded-lg m-4 bg-[#131313] border border-[#4e4e4ea4]"
+              className="w-96 h-12 text-[#F7F7F2] text-2xl rounded-lg m-4 bg-[#131313] border border-[#4e4e4ea4]"
               value={sampleText}
               onChange={onFieldChange}
             />
