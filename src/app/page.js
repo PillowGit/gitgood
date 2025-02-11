@@ -1,22 +1,11 @@
 'use client';
 
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { useState } from "react";
 import Link from "next/link";
 
-export function Card({ children, className }) {
-  return <div className={`p-4 border rounded bg-gray-800 ${className}`}>{children}</div>;
-}
-
-export function Button({ children, className, ...props }) {
-  return <button className={`px-4 py-2 bg-blue-500 text-white rounded ${className}`} {...props}>{children}</button>;
-}
-
-export function Input({ className, ...props }) {
-  return <input className={`p-2 border rounded bg-gray-700 text-white ${className}`} {...props} />;
-}
 
 export default function Home() {
   const [search, setSearch] = useState("");
