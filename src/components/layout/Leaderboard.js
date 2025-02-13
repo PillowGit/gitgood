@@ -1,3 +1,5 @@
+import { Button } from "../ui/Button";
+
 const leaderboard = [
   { name: "David Solano", points: 4300 },
   { name: "Mike Chen", points: 3600 },
@@ -13,21 +15,37 @@ const leaderboard = [
 
 export default function Leaderboard() {
   return (
-    <div className="w-1/3 bg-gray-900 p-4 rounded-lg">
-      <h3 className="text-lg font-bold mb-4">Global Leaderboard</h3>
-      <ul>
-        {leaderboard.map((user, index) => (
-          <li
-            key={index}
-            className="flex justify-between py-2 border-b border-gray-700"
-          >
-            <span>
-              {index + 1}. {user.name}
-            </span>
-            <span>{user.points} pts</span>
-          </li>
+    <div className="bg-[#1a1a1a] w-1/3 rounded-lg p-4">
+      <h2 className="text-lg font-semibold mb-4">Global Leader Board</h2>
+      <div className="space-y-4">
+        {[
+          { name: "David Solano", points: 4300 },
+          { name: "Mike Chen", points: 3500 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          { name: "Terry Blant", points: 3100 },
+          // Add more users...
+        ].map((user, i) => (
+          <div key={i} className="flex items-center space-x-3">
+            <span className="text-white font-bold  w-6">{i + 1}</span>
+            <img height={32} width={32} src={`/icon.svg`} />
+            <div className="flex-1">
+              <p className="font-medium">{user.name}</p>
+              <p className="text-sm text-gray-400">
+                Total Points: {user.points}
+              </p>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
+      <Button variant="link" className="w-full mt-4 text-[#1152b2]">
+        View More
+      </Button>
     </div>
   );
 }
