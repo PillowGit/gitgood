@@ -1,21 +1,53 @@
-'use client';
+"use client";
+
+import { useSession, signIn, signOut } from "next-auth/react";
+import { motion } from "motion/react";
+import { useState, useEffect } from "react";
 
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { useState } from "react";
 import Link from "next/link";
 
-
 export default function Home() {
+  const { data: session } = useSession();
   const [search, setSearch] = useState("");
 
+  const github_id = !session
+    ? ""
+    : session["user"]["image"].match(/githubusercontent.com\/u\/(\d+)/)[1];
+
   const problems = [
-    { title: "Smallest Path Between Nodes", author: "David Solano", date: "Sept 25, 2025", difficulty: 4.0 },
-    { title: "Create a Web Socket", author: "Yves Velasquez", date: "July 13, 2025", difficulty: 7.5 },
-    { title: "Database SQL Training", author: "Esteban Escartin", date: "July 10, 2025", difficulty: 3.2 },
-    { title: "HTML Basics", author: "Kyle Ho", date: "April 12, 2025", difficulty: 1.5 },
-    { title: "Traveling Salesman", author: "Bruce Mckenzie", date: "Feb 09, 2025", difficulty: 8.0 },
+    {
+      title: "Smallest Path Between Nodes",
+      author: "David Solano",
+      date: "Sept 25, 2025",
+      difficulty: 4.0,
+    },
+    {
+      title: "Create a Web Socket",
+      author: "Yves Velasquez",
+      date: "July 13, 2025",
+      difficulty: 7.5,
+    },
+    {
+      title: "Database SQL Training",
+      author: "Esteban Escartin",
+      date: "July 10, 2025",
+      difficulty: 3.2,
+    },
+    {
+      title: "HTML Basics",
+      author: "Kyle Ho",
+      date: "April 12, 2025",
+      difficulty: 1.5,
+    },
+    {
+      title: "Traveling Salesman",
+      author: "Bruce Mckenzie",
+      date: "Feb 09, 2025",
+      difficulty: 8.0,
+    },
   ];
 
   const leaderboard = [
@@ -36,10 +68,30 @@ export default function Home() {
       <header className="flex justify-between items-center p-4 border-b border-gray-700">
         <h1 className="text-2xl font-bold">GitGood</h1>
         <nav>
-          <Link href="#" className="mr-4">Problems</Link>
-          <Link href="#" className="mr-4">My Set</Link>
-          <Link href="#" className="mr-4">Create</Link>
-          <Link href="#" className="underline">Sign in with GitHub</Link>
+          <Link href="#" className="mr-4">
+            Problems
+          </Link>
+          <Link href="#" className="mr-4">
+            My Set
+          </Link>
+          <Link href="#" className="mr-4">
+            Create
+          </Link>
+          {!session ? (
+            <button
+              onClick={() => signIn("github")}
+              className="mt-8 text-lg border-2 border-[#4e4e4ea4] rounded-lg transition hover:scale-110 hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] hover:text-[#F7F7F2] cursor-pointer"
+            >
+              Sign in with GitHub
+            </button>
+          ) : (
+            <button
+              onClick={() => signOut()}
+              className="mt-8 text-lg border-2 border-[#4e4e4ea4] rounded-lg transition hover:scale-110 hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] hover:text-[#F7F7F2] cursor-pointer"
+            >
+              Sign Out
+            </button>
+          )}
         </nav>
       </header>
 
@@ -68,8 +120,12 @@ export default function Home() {
             {problems.map((problem, index) => (
               <Card key={index} className="p-4">
                 <h3 className="text-lg font-bold">{problem.title}</h3>
-                <p className="text-gray-400 text-sm">By: {problem.author} - {problem.date}</p>
-                <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded">Difficulty: {problem.difficulty}</span>
+                <p className="text-gray-400 text-sm">
+                  By: {problem.author} - {problem.date}
+                </p>
+                <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded">
+                  Difficulty: {problem.difficulty}
+                </span>
               </Card>
             ))}
           </div>
@@ -79,8 +135,13 @@ export default function Home() {
           <h3 className="text-lg font-bold mb-4">Global Leader Board</h3>
           <ul>
             {leaderboard.map((user, index) => (
-              <li key={index} className="flex justify-between py-2 border-b border-gray-700">
-                <span>{index + 1}. {user.name}</span>
+              <li
+                key={index}
+                className="flex justify-between py-2 border-b border-gray-700"
+              >
+                <span>
+                  {index + 1}. {user.name}
+                </span>
                 <span>{user.points} pts</span>
               </li>
             ))}
