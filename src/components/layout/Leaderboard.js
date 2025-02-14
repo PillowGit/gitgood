@@ -20,9 +20,9 @@ export default function Leaderboard() {
       <div className="space-y-4">
         {[
           { name: "David Solano", points: 4300 },
-          { name: "Mike Chen", points: 3500 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
+          { name: "Esteban Escartin", points: 3500 },
+          { name: "Yves Velasquez", points: 3300 },
+          { name: "Kyle Ho", points: 3100 },
           { name: "Terry Blant", points: 3100 },
           { name: "Terry Blant", points: 3100 },
           { name: "Terry Blant", points: 3100 },
@@ -43,9 +43,7 @@ export default function Leaderboard() {
           </div>
         ))}
       </div>
-      <Button variant="link" className="w-full mt-4 text-[#1152b2]">
-        View More
-      </Button>
+      <Button className="w-full mt-8 text-[#1152b2] bg-">View More</Button>
     </div>
   );
 }

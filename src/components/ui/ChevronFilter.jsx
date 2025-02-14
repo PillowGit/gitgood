@@ -1,23 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown } from "lucide-react"; // Ensure you're using Lucide React for icons
+import { useState, useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 
-export function ChevronFilter({ options, onSelect }) {
+export function ChevronFilter({ options = [], onSelect = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("All");
-
+  const dropdownRef = useRef(null);
+  
   const handleSelect = (option) => {
     setSelectedOption(option);
     onSelect(option);
     setIsOpen(false);
   };
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-2 bg-[#1a1a1a] text-white border border-gray-700 rounded-lg hover:bg-[#282828] transition"
+        className="flex items-center justify-between w-40 px-4 py-2 bg-[#1a1a1a] text-white border border-gray-700 rounded-lg hover:bg-[#282828] transition"
       >
         <span>{selectedOption}</span>
         <ChevronDown className="w-4 h-4" />
