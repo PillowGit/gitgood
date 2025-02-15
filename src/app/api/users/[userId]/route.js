@@ -2,7 +2,30 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 
-import { getUser, addUser } from "@/lib/database/users";
+import { getUser, addUser, updateUser } from "@/lib/database/users";
+
+async function SyncGithubUsername(userId, username) {
+  const githubUserData = await fetch(
+    `https://api.github.com/user/${userId}`
+  );
+  const githubUser = await githubUserData.json();
+  if (githubUser?.login !== username) {
+    await updateUser(userId, { username: githubUser.login });
+    return true;
+  }
+  return false;
+}
+async function SyncGithubDisplayName(userId, display_name) {
+  const githubUserData = await fetch(
+    `https://api.github.com/user/${userId}`
+  );
+  const githubUser = await githubUserData.json();
+  if (githubUser?.name !== display_name) {
+    await updateUser(userId, { display_name: githubUser.name });
+    return true;
+  }
+  return false;
+}
 
 export async function GET(req, { params }) {
   const { userId } = await params;
@@ -27,9 +50,14 @@ export async function GET(req, { params }) {
     // Otherwise, if they requested an invalid user, return error
     // Finally, if all is right, they are authorized to see all their data
     if (user.error && userId === github_id) {
+      // Request their username from Github
+      const githubUserData = await fetch(
+        `https://api.github.com/user/${github_id}`
+      );
+      const githubUser = await githubUserData.json();
       const userData = await addUser(
         github_id,
-        session.user.name,
+        githubUser.login,
         session.user.name,
         session.user.image
       );
@@ -40,6 +68,14 @@ export async function GET(req, { params }) {
         { status: 404 }
       );
     } else {
+      let updated = await SyncGithubUsername(userId, session.user.name);
+      if (updated) {
+        user.username = session.user.name;
+      }
+      updated = await SyncGithubDisplayName(userId, session.user.name);
+      if (updated) {
+        user.display_name = session.user.name;
+      }
       return NextResponse.json(user);
     }
   } else {
@@ -68,6 +104,14 @@ export async function GET(req, { params }) {
       delete user.ownership_is_public;
       delete user.points_are_public;
       delete user.accepted_are_public;
+      let updated = await SyncGithubUsername(userId, user.username);
+      if (updated) {
+        user.username = session.user.name;
+      }
+      updated = await SyncGithubDisplayName(userId, user.display_name);
+      if (updated) {
+        user.display_name = session.user.name;
+      }
       return NextResponse.json(user);
     }
   }
