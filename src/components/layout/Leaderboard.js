@@ -15,24 +15,17 @@ const leaderboard = [
 
 export default function Leaderboard() {
   return (
-    <div className="bg-[#1a1a1a] w-1/3 rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-4">Global Leader Board</h2>
+    <div className="bg-[#1a1a1a] sm:w-1/3 w-full rounded-lg p-4 mx-auto">
+      <h2 className="text-lg font-semibold mb-4 text-center">
+        Global Leader Board
+      </h2>
       <div className="space-y-4">
-        {[
-          { name: "David Solano", points: 4300 },
-          { name: "Esteban Escartin", points: 3500 },
-          { name: "Yves Velasquez", points: 3300 },
-          { name: "Kyle Ho", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          { name: "Terry Blant", points: 3100 },
-          // Add more users...
-        ].map((user, i) => (
-          <div key={i} className="flex items-center space-x-3">
-            <span className="text-white font-bold  w-6">{i + 1}</span>
+        {leaderboard.map((user, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between sm:space-x-4 space-x-2"
+          >
+            <span className="text-white font-bold w-6">{i + 1}</span>
             <img height={32} width={32} src={`/icon.svg`} />
             <div className="flex-1">
               <p className="font-medium">{user.name}</p>
@@ -43,7 +36,9 @@ export default function Leaderboard() {
           </div>
         ))}
       </div>
-      <Button className="w-full mt-8 text-[#1152b2] bg-">View More</Button>
+      <Button className="w-full mt-8 bg-transparent border-none hover:bg-[#282828] hover:text-white">
+        View More
+      </Button>
     </div>
   );
 }

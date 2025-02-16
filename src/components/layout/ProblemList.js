@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
-import { Card } from "@/components/ui/Card";
+import { ChevronDown, Search } from "lucide-react"; // Added Search icon
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -82,20 +81,21 @@ export default function ProblemList() {
   });
 
   return (
-    <div className="w-2/3 pr-6 space-y-6">
-      <div className="flex items-center space-x-4">
+    <div className="sm:w-full md:w-2/3 lg:w-5/6 pr-6 space-y-6 mx-auto bg-[#1a1a1a] rounded-lg p-3">
+      <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="relative" ref={dropdownRef}>
+          {/* Filter Dropdown */}
           <Button
             variant="outline"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-600 hover:border-gray-400 transition"
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg border border-gray-600 hover:border-gray-400 bg-[#222222] transition"
           >
             <span>{selectedDifficulty}</span>
             <ChevronDown className="w-4 h-4" />
           </Button>
 
           {isDropdownOpen && (
-            <div className="absolute left-0 mt-2 w-48 bg-[#1a1a1a] border border-gray-700 rounded-lg shadow-lg z-10">
+            <div className="absolute left-0 mt-2 w-48 bg-[#222222] border border-gray-700 rounded-lg shadow-lg z-10">
               {difficultyLevels.map((level, index) => (
                 <button
                   key={index}
@@ -103,7 +103,7 @@ export default function ProblemList() {
                     setSelectedDifficulty(level);
                     setIsDropdownOpen(false);
                   }}
-                  className="w-full text-left px-4 py-2 text-white hover:bg-[#282828] transition"
+                  className="w-full text-left px-4 py-2 text-gray hover:bg-[#282828] transition"
                 >
                   {level}
                 </button>
@@ -113,12 +113,13 @@ export default function ProblemList() {
         </div>
 
         <div className="relative flex-1">
-          <Input
+          <input
             placeholder="Search problems"
-            className="pl-10 bg-[#1a1a1a] border-gray-700 focus:border-gray-400 transition rounded-lg text-gray-300"
+            className="pl-10 pr-4 py-2 placeholder-gray bg-[#222222] text-white border border-gray-600 hover:border-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 transition duration-200 ease-in-out"
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
+          <Search className="absolute left-3 top-2.5 text-white" />
         </div>
       </div>
 
@@ -127,7 +128,7 @@ export default function ProblemList() {
           filteredProblems.map((problem, i) => (
             <div
               key={i}
-              className="flex items-start space-x-4 p-4 bg-[#1a1a1a] rounded-lg hover:bg-[#282828] transition shadow-md"
+              className="flex flex-col sm:flex-row items-start space-x-0 sm:space-x-4 p-4 bg-[#1a1a1a] rounded-lg hover:bg-[#282828] transition shadow-md"
             >
               <div className="flex-1">
                 <div className="flex items-start justify-between">
@@ -148,10 +149,9 @@ export default function ProblemList() {
         )}
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+      <div className="flex items-center justify-center pt-4 border-t border-gray-700">
         <Button
           variant="outline"
-          disabled
           className="px-4 py-2 rounded-lg border-gray-600 text-gray-400"
         >
           &lt; Prev
