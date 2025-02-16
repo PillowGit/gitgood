@@ -3,27 +3,51 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-
+/**
+ * Navbar component that handles the navigation and user authentication UI.
+ *
+ * This component displays a navigation bar with links to different sections of the app.
+ * It shows either a sign-in button or a sign-out button depending on the user's authentication status.
+ * Additionally, it includes a hamburger menu for mobile view that toggles the display of navigation links.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Navbar />
+ * );
+ */
 export default function Navbar() {
+  /**
+   * Session data from `next-auth` to track user authentication state.
+   * @type {Object|null}
+   * @property {Object} user - User data if authenticated (includes user details like name).
+   * @property {boolean} authenticated - Boolean flag indicating if the user is logged in.
+   */
   const { data: session } = useSession();
-  const [menuOpen, setMenuOpen] = useState(false); // State for toggling menu
+
+  /**
+   * State for controlling the visibility of the mobile menu.
+   * @type {boolean}
+   */
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="flex justify-between items-center py-4 px-14 bg-[#282828] border-b-2 border-[#282828] drop-shadow-lg h-14">
+      {/* Logo and navigation links */}
       <div className="flex items-center pt-1 space-x-6">
         <Link href="/">
           <img src="/icon.svg" alt="GitGood Logo" className="w-7 h-7" />
         </Link>
         <div className="hidden md:flex space-x-6">
-          {/* Navigation links hidden on mobile */}
+          {/* Links visible on larger screens */}
           <Link href="/problems">Problems</Link>
           <Link href="/my-set">My Set</Link>
           <Link href="/create">Create</Link>
         </div>
       </div>
 
+      {/* Authentication button for larger screens */}
       <div className="pt-1 hidden md:block">
-        {/* Only show on larger screens */}
         {!session ? (
           <button onClick={() => signIn("github")} className="underline">
             Sign in with GitHub

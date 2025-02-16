@@ -5,53 +5,97 @@ import { ChevronDown, Search } from "lucide-react"; // Added Search icon
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-const problems = [
-  {
-    title: "Smallest Path Between Nodes",
-    author: "David Solano",
-    date: "Sept 25, 2025",
-    difficulty: 4.0,
-  },
-  {
-    title: "Create a Web Socket",
-    author: "Yves Velasquez",
-    date: "July 13, 2025",
-    difficulty: 7.5,
-  },
-  {
-    title: "Database SQL Training",
-    author: "Esteban Escartin",
-    date: "July 10, 2025",
-    difficulty: 3.2,
-  },
-  {
-    title: "HTML Basics",
-    author: "Kyle Ho",
-    date: "April 12, 2025",
-    difficulty: 1.5,
-  },
-  {
-    title: "Traveling Salesman",
-    author: "Bruce Mckenzie",
-    date: "Feb 09, 2025",
-    difficulty: 8.0,
-  },
-];
-
-const difficultyLevels = [
-  "Filters",
-  "Easy (1-3)",
-  "Medium (4-6)",
-  "Hard (7-10)",
-];
-
+/**
+ * ProblemList component for displaying a list of coding problems with search and filter functionality.
+ *
+ * This component allows users to search for problems and filter them by difficulty levels.
+ * It displays a list of problems with their titles, authors, dates, and difficulty levels.
+ * The component also features a dropdown menu for selecting difficulty filters and an input field for searching problems.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ProblemList />
+ * );
+ */
 export default function ProblemList() {
+  /**
+   * State for the current search query.
+   * @type {string}
+   */
   const [search, setSearch] = useState("");
+
+  /**
+   * State for the selected difficulty level filter.
+   * @type {string}
+   */
   const [selectedDifficulty, setSelectedDifficulty] = useState("Filters");
+
+  /**
+   * State for tracking the open/close status of the difficulty filter dropdown.
+   * @type {boolean}
+   */
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  /**
+   * Ref for the dropdown menu to detect clicks outside of it.
+   * @type {React.RefObject}
+   */
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  /**
+   * Array containing problem data for display.
+   * Each problem includes title, author, date, and difficulty.
+   * @type {Array<{title: string, author: string, date: string, difficulty: number}>}
+   */
+  const problems = [
+    {
+      title: "Smallest Path Between Nodes",
+      author: "David Solano",
+      date: "Sept 25, 2025",
+      difficulty: 4.0,
+    },
+    {
+      title: "Create a Web Socket",
+      author: "Yves Velasquez",
+      date: "July 13, 2025",
+      difficulty: 7.5,
+    },
+    {
+      title: "Database SQL Training",
+      author: "Esteban Escartin",
+      date: "July 10, 2025",
+      difficulty: 3.2,
+    },
+    {
+      title: "HTML Basics",
+      author: "Kyle Ho",
+      date: "April 12, 2025",
+      difficulty: 1.5,
+    },
+    {
+      title: "Traveling Salesman",
+      author: "Bruce Mckenzie",
+      date: "Feb 09, 2025",
+      difficulty: 8.0,
+    },
+  ];
+
+  /**
+   * Array of difficulty levels available for filtering problems.
+   * @type {string[]}
+   */
+  const difficultyLevels = [
+    "Filters",
+    "Easy (1-3)",
+    "Medium (4-6)",
+    "Hard (7-10)",
+  ];
+
+  /**
+   * Effect hook that closes the difficulty dropdown if a click occurs outside of it.
+   * This effect listens for `mousedown` events on the document.
+   */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -63,7 +107,11 @@ export default function ProblemList() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter problems based on search & difficulty
+  /**
+   * Filters the problems based on the current search query and selected difficulty level.
+   *
+   * @returns {Array<{title: string, author: string, date: string, difficulty: number}>} The filtered problems.
+   */
   const filteredProblems = problems.filter((problem) => {
     const matchesSearch = problem.title
       .toLowerCase()
@@ -82,9 +130,10 @@ export default function ProblemList() {
 
   return (
     <div className="sm:w-full md:w-2/3 lg:w-5/6 pr-6 space-y-6 mx-auto bg-[#1a1a1a] rounded-lg p-3">
+      {/* Filter Dropdown and Search Input */}
       <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        {/* Dropdown Button */}
         <div className="relative" ref={dropdownRef}>
-          {/* Filter Dropdown */}
           <Button
             variant="outline"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -94,6 +143,7 @@ export default function ProblemList() {
             <ChevronDown className="w-4 h-4" />
           </Button>
 
+          {/* Dropdown Menu */}
           {isDropdownOpen && (
             <div className="absolute left-0 mt-2 w-48 bg-[#222222] border border-gray-700 rounded-lg shadow-lg z-10">
               {difficultyLevels.map((level, index) => (
@@ -112,6 +162,7 @@ export default function ProblemList() {
           )}
         </div>
 
+        {/* Search Input */}
         <div className="relative flex-1">
           <input
             placeholder="Search problems"
@@ -123,6 +174,7 @@ export default function ProblemList() {
         </div>
       </div>
 
+      {/* Problem List Display */}
       <div className="h-[600px] space-y-4 overflow-auto">
         {filteredProblems.length > 0 ? (
           filteredProblems.map((problem, i) => (
@@ -149,6 +201,7 @@ export default function ProblemList() {
         )}
       </div>
 
+      {/* Pagination */}
       <div className="flex items-center justify-center pt-4 border-t border-gray-700">
         <Button
           variant="outline"
