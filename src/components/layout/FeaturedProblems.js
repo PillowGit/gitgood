@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/Card";
 export default function FeaturedProblems() {
   return (
     <section className="mb-12">
-      <h2 className="text-2xl font-semibold mt-6 mb-2">Featured Problems</h2>
+      <h2 className="text-2xl mt-6 mb-4">Featured Problems</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           {

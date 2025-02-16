@@ -7,10 +7,10 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   return (
-    <header className="flex justify-between items-center py-4 px-8 bg-[#282828] border-b-2 border-[#282828] drop-shadow-lg h-14">
+    <header className="flex justify-between items-center py-4 px-14 bg-[#282828] border-b-2 border-[#282828] drop-shadow-lg h-14">
       <div className="flex items-center pt-1 space-x-6">
         <Link href="/">
-          <img src="/icon.svg" alt="GitGood Logo" className="w-8 h-8" />
+          <img src="/icon.svg" alt="GitGood Logo" className="w-7 h-7" />
         </Link>
         <Link href="/problems" className="mr-4">
           Problems

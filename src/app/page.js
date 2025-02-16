@@ -6,7 +6,7 @@ import FeaturedProblems from "@/components/layout/FeaturedProblems";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#282828] text-white p-6">
+    <div className="min-h-screen bg-[#222222] text-white p-8 px-14">
       <FeaturedProblems />
       <div className="mt-8 flex">
         <ProblemList />
