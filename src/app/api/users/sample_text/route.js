@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/database/firebase";
 
 const COLLECTION_NAME = "users";
 
