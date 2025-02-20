@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
 
 /**
@@ -105,7 +105,7 @@ async function updateUser(userId, data, merge = true) {
 async function deleteUser(userId) {
   try {
     const userRef = doc(db, "users", userId);
-    await setDoc(userRef, null);
+    await deleteDoc(userRef);
   } catch (e) {
     return { error: e.message };
   }
