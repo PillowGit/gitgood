@@ -6,15 +6,6 @@ import FeaturedProblems from "@/components/layout/FeaturedProblems";
 import Link from "next/link";
 
 export default function Home() {
-  async function test() {
-    const id = "104609738";
-    fetch(`/api/users/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        alert(JSON.stringify(data));
-      });
-  }
-
   return (
     <div className="min-h-screen bg-[#222222] text-white p-8 px-14">
       <FeaturedProblems />
