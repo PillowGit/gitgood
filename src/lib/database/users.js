@@ -1,8 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
-import { LRUCache } from "lru-cache";
-
-const cache = new LRUCache({ max: 500, ttl: 1000 * 60 * 5 });
 
 /**
  * The base user data structure
@@ -63,18 +60,13 @@ async function addUser(userId, username, display_name, avatar) {
   return result;
 }
 
-/**  Retrieves a user from the cache/database, caches result and returns
+/**  Retrieves a user from the database
  * @param {string} userId - The user's id
  * @returns {UserData | Error} The user's data or an error message
  */
 async function getUser(userId) {
   try {
-    // Check cache
-    const cachedUser = cache.get(userId);
-    if (cachedUser) {
-      return cachedUser;
-    }
-    // Fetch from Firestore if not cached
+    // Fetch from Firestore
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
     // If not exist, return error
@@ -82,7 +74,6 @@ async function getUser(userId) {
       return { error: "User not found" };
     }
     const userData = userSnap.data();
-    cache.set(userId, userData);
     return userData;
   } catch (e) {
     return { error: e.message };
@@ -100,7 +91,6 @@ async function updateUser(userId, data, merge = true) {
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, data, { merge });
-    cache.set(userId, data);
     return data;
   } catch (e) {
     return { error: e.message };
@@ -116,7 +106,6 @@ async function deleteUser(userId) {
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, null);
-    cache.del(userId);
   } catch (e) {
     return { error: e.message };
   }
