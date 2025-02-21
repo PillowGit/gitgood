@@ -1,6 +1,6 @@
 import { dateToTimestamp } from "@/lib/epoch";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
-import { hashBase62URLSafe } from "@/lib/hash";
+import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
 
 /**
@@ -138,9 +138,9 @@ function validateQuestionData(questionData) {
 async function addQuestion(questionData) {
   try {
     while (true) {
-      const questionId = hashBase62URLSafe(new Date().toISOString(), 10);
+      const questionId = generateRandomString(6);
       // Ensure this id is unique
-      const question = getQuestion(questionId);
+      const question = await getQuestion(questionId);
       if (!question.error) {
         continue;
       }
