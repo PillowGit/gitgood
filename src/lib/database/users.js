@@ -49,15 +49,20 @@ const base_user_data = {
  * @returns {UserData | Error} The user's data
  */
 async function addUser(userId, username, display_name, avatar) {
-  const userData = {
-    ...base_user_data,
-    github_id: userId,
-    username,
-    display_name,
-    avatar,
-  };
-  const result = await updateUser(userId, userData);
-  return result;
+  try {
+    const userData = {
+      ...base_user_data,
+      github_id: userId,
+      username,
+      display_name,
+      avatar,
+    };
+    const result = await updateUser(userId, userData);
+    return result;
+  } catch (e) {
+    console.log("Caught error while adding user to database", e);
+    return { error: e.message };
+  }
 }
 
 /**  Retrieves a user from the database
@@ -76,6 +81,7 @@ async function getUser(userId) {
     const userData = userSnap.data();
     return userData;
   } catch (e) {
+    console.log("Caught error while getting user from database", e);
     return { error: e.message };
   }
 }
@@ -93,6 +99,7 @@ async function updateUser(userId, data, merge = true) {
     await setDoc(userRef, data, { merge });
     return data;
   } catch (e) {
+    console.log("Caught error while updating user in database ", e);
     return { error: e.message };
   }
 }
@@ -107,6 +114,7 @@ async function deleteUser(userId) {
     const userRef = doc(db, "users", userId);
     await deleteDoc(userRef);
   } catch (e) {
+    console.log("Caught error while deleting user from database", e);
     return { error: e.message };
   }
 }
