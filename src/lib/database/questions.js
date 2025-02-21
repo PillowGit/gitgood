@@ -66,56 +66,65 @@ const base_question_data = {
   code: [],
   test_cases: [],
   important: {
-    title: "",
+    title: "Example Title",
     difficulty_sum: 0,
     difficulty_votes: 0,
     votes_bad: 0,
     votes_good: 0,
     tags: [],
-    questionid: "",
+    questionid: "Example ID",
     languages: [],
     display_publicly: true,
-    author_id: "",
-    author_name: "",
+    author_id: "Example Author ID",
+    author_name: "Anonymous",
     date_created: dateToTimestamp(new Date()),
     date_updated: dateToTimestamp(new Date()),
   },
-  description: "",
+  description: "Example Description",
+};
+
+/** @type {CodeData} */
+const fake_code_data = {
+  language: "javascript",
+  inputs: [],
+  template: [],
+  solution: [],
+  tester: [],
 };
 
 /**
- * Validates a question data object
+ * Validates a question data object. Returns an object with either status = true or status = false and a reason for the failure.
  * @param {QuestionData} questionData - The question data
- * @returns {boolean} Whether the question data is valid
+ * @returns {{status: boolean, reason?: string | null}} result - The result of the validation
  */
 function validateQuestionData(questionData) {
   // Ensure all keys are present
   for (const key of Object.keys(base_question_data)) {
-    if (!questionData[key]) {
-      return false;
+    if (questionData[key] === undefined) {
+      return { status: false, reason: `Missing primary key: ${key}` };
     }
   }
   // Ensure no unknown keys are present
   for (const key of Object.keys(questionData)) {
-    if (!base_question_data[key]) {
-      return false;
+    if (base_question_data[key] === undefined) {
+      return { status: false, reason: `Unknown key: ${key}` };
     }
   }
   // Ensure code has at least 1 object
   if (questionData.code.length === 0) {
-    return false;
+    return { status: false, reason: "No valid code objects" };
   }
   // Ensure all keys in important are present
   for (const key of Object.keys(base_question_data.important)) {
-    if (!questionData.important[key]) {
-      return false;
+    if (questionData.important[key] === undefined) {
+      return { status: false, reason: `Missing important key: ${key}` };
     }
   }
   // Ensure all keys in every object in code are present
-  for (const code of questionData.code) {
-    for (const key of Object.keys(base_question_data.code[0])) {
-      if (!code[key]) {
-        return false;
+  for (const codeobj of questionData.code) {
+    for (const key of Object.keys(fake_code_data)) {
+      if (codeobj[key] === undefined) {
+        return { status: false, reason: `Missing code object key: ${key}` };
       }
     }
   }
@@ -123,11 +132,11 @@ function validateQuestionData(questionData) {
   for (const test_case of questionData.test_cases) {
     for (const key of Object.keys(base_question_data.test_cases[0])) {
       if (!test_case[key]) {
-        return false;
+        return { status: false, reason: `Missing test case key: ${key}` };
       }
     }
   }
-  return true;
+  return { status: true };
 }
 
 /**
@@ -154,6 +163,7 @@ async function addQuestion(questionData) {
       return updateQuestion(questionId, questionData);
     }
   } catch (e) {
+    console.log("Caught error while adding question to database", e);
     return { error: e.message };
   }
 }
@@ -175,6 +185,7 @@ async function getQuestion(questionId) {
     const questionData = questionSnap.data();
     return questionData;
   } catch (e) {
+    console.log("Caught error while getting question from database", e);
     return { error: e.message };
   }
 }
@@ -188,8 +199,8 @@ async function getQuestion(questionId) {
 async function updateQuestion(questionId, data) {
   try {
     const is_valid = validateQuestionData(data);
-    if (!is_valid) {
-      return { error: "Invalid question data format" };
+    if (!is_valid.status) {
+      return { error: is_valid.reason };
     }
 
     const questionRef = doc(db, "questions", questionId);
@@ -201,6 +212,7 @@ async function updateQuestion(questionId, data) {
 
     return data;
   } catch (e) {
+    console.log("Caught error while updating question in database", e);
     return { error: e.message };
   }
 }
@@ -217,6 +229,7 @@ async function deleteQuestion(questionId) {
     const shortQuestionRef = doc(db, "questions-short", questionId);
     await deleteDoc(shortQuestionRef);
   } catch (e) {
+    console.log("Caught error while deleting question from database", e);
     return { error: e.message };
   }
 }
@@ -251,4 +264,5 @@ export {
   updateQuestion,
   deleteQuestion,
   getBaseQuestionData,
+  validateQuestionData,
 };
