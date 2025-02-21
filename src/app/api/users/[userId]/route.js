@@ -22,7 +22,72 @@ async function SyncGithubDisplayName(userId, display_name) {
   }
   return false;
 }
-
+/**
+ * @openapi
+ * /api/users/{userId}:
+ *  get:
+ *    description: Retrieve user data for a specific user ID.
+ *    parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to retrieve.
+ *    responses:
+ *      200:
+ *        description: User retrieved successfully.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                github_id:
+ *                  type: string
+ *                  description: The user's github id. Always included.
+ *                username:
+ *                  type: string
+ *                  description: The user's username. Always included.
+ *                display_name:
+ *                  type: string
+ *                  description: The user's display name. Always included.
+ *                avatar:
+ *                  type: string
+ *                  description: The user's avatar URL (github url). Always included.
+ *                accepted:
+ *                  type: array
+ *                  items:
+ *                    type: string
+ *                  description: The list of challenges the user has completed.
+ *                created:
+ *                  type: array
+ *                  items:
+ *                    type: string
+ *                  description: The list of challenges the user has created.
+ *                points_accumulated:
+ *                  type: number
+ *                  description: The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
+ *      400:
+ *        description: User ID is invalid.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: The error message.
+ *      404:
+ *        description: User not found.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: The error message.
+ */
 export async function GET(req, { params }) {
   const { userId } = await params;
 
