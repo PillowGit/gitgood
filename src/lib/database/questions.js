@@ -221,4 +221,34 @@ async function deleteQuestion(questionId) {
   }
 }
 
-export { addQuestion, getQuestion, updateQuestion, deleteQuestion };
+/**
+ * Deep copies an object recursively
+ * @param {any} obj - The object to copy
+ * @returns {any} The copied object
+ */
+function deepCopy(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+  const copy = Array.isArray(obj) ? [] : {};
+  for (let key in obj) {
+    copy[key] = deepCopy(obj[key]);
+  }
+  return copy;
+}
+
+/**
+ * Returns the base question data structure
+ * @returns {QuestionData}
+ */
+function getBaseQuestionData() {
+  return deepCopy(base_question_data);
+}
+
+export {
+  addQuestion,
+  getQuestion,
+  updateQuestion,
+  deleteQuestion,
+  getBaseQuestionData,
+};
