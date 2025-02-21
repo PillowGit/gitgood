@@ -8,7 +8,7 @@ const safe_characters =
  * @param {string} characters The set of characters to use for the hash.
  * @returns {string} The generated hash string.
  */
-function generateHash(str, length, characters) {
+function generateHash(str, length) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const charCode = str.charCodeAt(i);
@@ -16,7 +16,7 @@ function generateHash(str, length, characters) {
   }
   let result = "";
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.abs(hash) % safe_characters.length);
+    result += safe_characters.charAt(Math.abs(hash) % safe_characters.length);
     hash = Math.floor(hash / safe_characters.length);
   }
   return result;
