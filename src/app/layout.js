@@ -13,10 +13,12 @@ const openSans = Open_Sans({
 
 export const metadata = {
   title: "GitGood",
-  description: "A platform for uploading or exploring coding interview style questions that anyone can tackle.",
+  description:
+    "A platform for uploading or exploring coding interview style questions that anyone can tackle.",
   openGraph: {
     title: "GitGood",
-    description: "A platform for uploading or exploring coding interview style questions that anyone can tackle.",
+    description:
+      "A platform for uploading or exploring coding interview style questions that anyone can tackle.",
     url: "https://gitgood.cc",
     type: "website",
     site_name: "GitGood",
@@ -26,9 +28,9 @@ export const metadata = {
         alt: "A cool looking laptop we thought looked cool",
         width: 689,
         height: 360,
-      }
-    ]
-  }
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({ children }) {
