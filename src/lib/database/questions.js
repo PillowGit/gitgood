@@ -3,63 +3,7 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
 
-/**
- * A Firebase Timestamp object.
- * @typedef {Object} FirebaseTimestamp
- * @property {number} seconds - The number of seconds since the epoch.
- * @property {number} nanoseconds - The number of nanoseconds since the epoch.
- */
-
-/**
- * How code for each question is stored in the database
- * @typedef {Object} CodeData
- * @property {string} language - The language the code is written in
- * @property {string[]} inputs - Lines of code that define the "input" section of a code challenge
- * @property {string[]} template - Lines of code that define the "template" section of a code challenge. This is the code that the user will modify
- * @property {string[]} solution - Lines of code that define the "solution" section of a code challenge. This is the correct answer
- * @property {string[]} tester - Lines of code that define the "tester" section of a code challenge. This is the code that will test the user's solution and compare with the solution
- */
-
-/**
- * How test cases, for display purposes, are stored
- * @typedef {Array<Object>} TestCaseData
- * @property {string} ANSWER - The expected output of the test case
- * @property {string} [key] - Other key-value pairs exist, where the key can be any string. The value associated with these other keys are also strings.
- */
-
-/**
- * How the important metadata for each question is stored in the database
- * @typedef {Object} important
- * @property {string} title - The title of the question
- * @property {number} difficulty_sum - The sum of the difficulty ratings of the question
- * @property {number} difficulty_votes - The number of difficulty ratings given to the question
- * @property {number} votes_bad - The number of "bad" votes given to the question
- * @property {number} votes_good - The number of "good" votes given to the question
- * @property {string[]} tags - The tags associated with the question
- * @property {string} questionid - The id of the question
- * @property {string[]} languages - The languages the question is available in
- * @property {boolean} display_publicly - Whether the question is public
- * @property {string} author_id - The id of the author of the question
- * @property {string} author_name - The name of the author of the question
- * date created next
- * @property {FirebaseTimestamp} date_created - The date the question was created
- * @property {FirebaseTimestamp} date_updated - The date the question was last modified
- */
-
-/**
- * The base question data structure
- * @typedef {Object} QuestionData
- * @property {CodeData[]} code - The code data available for the question
- * @property {TestCaseData} test_cases - The test cases
- * @property {important} important - The important metadata
- * @property {string} description - The description of the question
- */
-
-/**
- * Error message object
- * @typedef {Object} Error
- * @property {string} error - The error message
- */
+import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {important}, @type {QuestionData} */ "@/lib/database/types";
 
 /** @type {QuestionData} */
 const base_question_data = {

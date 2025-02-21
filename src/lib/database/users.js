@@ -1,28 +1,7 @@
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
 
-/**
- * The base user data structure
- * @typedef {Object} UserData
- * @property {string[]} accepted - The list of challenges the user has completed
- * @property {string[]} attempted - The list of challenges the user has attempted
- * @property {string[]} created - The list of challenges the user has created
- * @property {string} github_id - The user's github id
- * @property {string} username - The user's username
- * @property {string} display_name - The user's display name
- * @property {string} avatar - The user's avatar URL (github url)
- * @property {number} points_accumulated - The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
- * @property {boolean} can_create - Whether the user can create challenges (used for banning users who violate terms)
- * @property {boolean} accepted_are_public - Whether the user's accepted challenges are displayed on their profile
- * @property {boolean} points_are_public - Whether the user's points are displayed on their profile
- * @property {boolean} ownership_is_public - Whether the user's name appears on challenges they create
- */
-
-/**
- * Error message object
- * @typedef {Object} Error
- * @property {string} error - The error message
- */
+import /** @type {Error}, @type {UserData} */ "@/lib/database/types";
 
 /** @type {UserData} */
 const base_user_data = {
