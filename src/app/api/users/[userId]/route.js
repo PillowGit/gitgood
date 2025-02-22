@@ -26,7 +26,29 @@ async function SyncGithubDisplayName(userId, display_name) {
  * @openapi
  * /api/users/{userId}:
  *  get:
- *    description: Retrieve user data for a specific user ID.
+ *    summary: Retrieve user data for a specific user ID.
+ *    description: |
+ *      # When the request is coming from an authorized client:
+ *
+ *      **1. If the user doesn't exist in our database, but that user is requesting their data**
+ *      - We create an account for them, return their data after finished
+ *
+ *      **2. If the user doesn't exist in our database, and the requester is not the person whose data they want**
+ *      - Return 404. The user does not exist
+ *
+ *      **3. If the user exists in the database and the requester is that user**
+ *      - Return to them all of their data
+ *
+ *      **4. If the user exists in the database, but the requester is not that user**
+ *      - Send them only public data of the user
+ *
+ *      # When the request is coming from an unauthorized client:
+ *
+ *      **1. If the user doesn't exist in our database**
+ *      - Return 404. The user does not exist
+ *
+ *      **2. If the user does exist in our database**
+ *      - Send them only public data of the user
  *    parameters:
  *       - in: path
  *         name: userId
