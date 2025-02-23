@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import openapiSpecification from "@/lib/swagger";
+import openapiSpecification from "@/lib/swagger.json";
 
 /**
  * @openapi
