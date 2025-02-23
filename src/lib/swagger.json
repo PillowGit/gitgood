@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GitGood",
+    "version": "1.0.0",
+    "description": "The public API for GitGood"
+  },
+  "paths": {
+    "/api/docs": {
+      "get": {
+        "summary": "Retrieve OpenAPI specification.",
+        "description": "Retrieve OpenAPI specification in JSON format for API documentation.",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved OpenAPI specification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "The OpenAPI specification."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{userId}": {
+      "get": {
+        "summary": "Retrieve user data for a specific user ID.",
+        "description": "# When the request is coming from an authorized client:\n\n**1. If the user doesn't exist in our database, but that user is requesting their data**\n- We create an account for them, return their data after finished\n\n**2. If the user doesn't exist in our database, and the requester is not the person whose data they want**\n- Return 404. The user does not exist\n\n**3. If the user exists in the database and the requester is that user**\n- Return to them all of their data\n\n**4. If the user exists in the database, but the requester is not that user**\n- Send them only public data of the user\n\n# When the request is coming from an unauthorized client:\n\n**1. If the user doesn't exist in our database**\n- Return 404. The user does not exist\n\n**2. If the user does exist in our database**\n- Send them only public data of the user\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "github_id": {
+                      "type": "string",
+                      "description": "The user's github id. Always included."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The user's username. Always included."
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "description": "The user's display name. Always included."
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "description": "The user's avatar URL (github url). Always included."
+                    },
+                    "accepted": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The list of challenges the user has completed."
+                    },
+                    "created": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The list of challenges the user has created."
+                    },
+                    "points_accumulated": {
+                      "type": "number",
+                      "description": "The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User ID is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}
