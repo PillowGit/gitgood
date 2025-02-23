@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
+    "dev": "node swagger.js && next dev --turbopack",
+    "build": "next build && node swagger.js",
     "start": "next start",
     "lint": "next lint"
   },
