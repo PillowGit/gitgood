@@ -3,13 +3,13 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
 
-import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {important}, @type {QuestionData} */ "@/lib/database/types";
+import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
 
 /** @type {QuestionData} */
 const base_question_data = {
   code: [],
   test_cases: [],
-  important: {
+  metadata: {
     title: "Example Title",
     difficulty_sum: 0,
     difficulty_votes: 0,
@@ -58,10 +58,10 @@ function validateQuestionData(questionData) {
   if (questionData.code.length === 0) {
     return { status: false, reason: "No valid code objects" };
   }
-  // Ensure all keys in important are present
-  for (const key of Object.keys(base_question_data.important)) {
-    if (questionData.important[key] === undefined) {
-      return { status: false, reason: `Missing important key: ${key}` };
+  // Ensure all keys in metadata are present
+  for (const key of Object.keys(base_question_data.metadata)) {
+    if (questionData.metadata[key] === undefined) {
+      return { status: false, reason: `Missing metadata key: ${key}` };
     }
   }
   // Ensure all keys in every object in code are present
@@ -102,7 +102,7 @@ async function addQuestion(questionData) {
         return { error: question.error };
       }
       // Set the id
-      questionData.important.questionid = questionId;
+      questionData.metadata.questionid = questionId;
       // Add the question
       return updateQuestion(questionId, questionData);
     }
@@ -152,7 +152,7 @@ async function updateQuestion(questionId, data) {
 
     // The "questions-short" is used for quick access question metadata without the full question data
     const shortQuestionRef = doc(db, "questions-short", questionId);
-    await setDoc(shortQuestionRef, data.important);
+    await setDoc(shortQuestionRef, data.metadata);
 
     return data;
   } catch (e) {
