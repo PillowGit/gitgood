@@ -42,7 +42,7 @@
 
 /**
  * How the important metadata for each question is stored in the database
- * @typedef {Object} important
+ * @typedef {Object} Metadata
  * @property {string} title - The title of the question
  * @property {number} difficulty_sum - The sum of the difficulty ratings of the question
  * @property {number} difficulty_votes - The number of difficulty ratings given to the question
@@ -64,7 +64,7 @@
  * @typedef {Object} QuestionData
  * @property {CodeData[]} code - The code data available for the question
  * @property {TestCase[]} test_cases - The test cases
- * @property {important} important - The important metadata
+ * @property {Metadata} metadata - The important metadata
  * @property {string} description - The description of the question
  */
 
