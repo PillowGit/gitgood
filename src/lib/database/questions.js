@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
 
-import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
+import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
 
 /** @type {QuestionData} */
 const base_question_data = {
@@ -15,7 +15,34 @@ const base_question_data = {
     difficulty_votes: 0,
     votes_bad: 0,
     votes_good: 0,
-    tags: [],
+    tags: {
+      array: false,
+      string: false,
+      hash_table: false,
+      dp: false,
+      math: false,
+      sorting: false,
+      greedy: false,
+      dfs: false,
+      bfs: false,
+      binary_search: false,
+      matrix: false,
+      tree: false,
+      bit_manipulation: false,
+      two_pointer: false,
+      heap: false,
+      stack: false,
+      graph: false,
+      sliding_window: false,
+      back_tracking: false,
+      linked_list: false,
+      set: false,
+      queue: false,
+      memo: false,
+      recursion: false,
+      hashing: false,
+      bit_mask: false,
+    },
     questionid: "Example ID",
     languages: [],
     display_publicly: true,
@@ -62,6 +89,12 @@ function validateQuestionData(questionData) {
   for (const key of Object.keys(base_question_data.metadata)) {
     if (questionData.metadata[key] === undefined) {
       return { status: false, reason: `Missing metadata key: ${key}` };
+    }
+  }
+  // Ensure all tags are present
+  for (const key of Object.keys(base_question_data.metadata.tags)) {
+    if (questionData.metadata.tags[key] === undefined) {
+      return { status: false, reason: `Missing tag: ${key}` };
     }
   }
   // Ensure all keys in every object in code are present
