@@ -25,6 +25,25 @@
         }
       }
     },
+    "/api/tags": {
+      "get": {
+        "summary": "Get available question tags.",
+        "description": "Gets all available question tags in JSON format.",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved question tags.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "The expected question tags object format."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/{userId}": {
       "get": {
         "summary": "Retrieve user data for a specific user ID.",
