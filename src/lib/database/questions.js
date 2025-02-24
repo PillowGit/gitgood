@@ -221,7 +221,10 @@ async function deleteQuestion(questionId) {
  * @returns {QuestionData}
  */
 function getBaseQuestionData() {
-  return deepCopy(base_question_data);
+  const question_data = deepCopy(base_question_data);
+  question_data.metadata.date_created = dateToTimestamp(new Date());
+  question_data.metadata.date_updated = dateToTimestamp(new Date());
+  return question_data;
 }
 
 export {
