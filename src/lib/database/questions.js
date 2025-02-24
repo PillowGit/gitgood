@@ -6,7 +6,7 @@ import {
   deepCopy,
 } from "@/lib/utilities";
 
-import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
+import /** @type {FirebaseTimestamp}, @type {DatabaseError}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
 
 /** @type {QuestionData} */
 const base_question_data = {
@@ -124,7 +124,7 @@ function validateQuestionData(questionData) {
 /**
  * Adds a question to the database. Must at least have 1 code object. All fields must be present and valid, id in questionid will be overwritten.
  * @param {QuestionData} questionData - The question data
- * @returns {QuestionData | Error} The question data
+ * @returns {QuestionData | DatabaseError} The question data
  */
 async function addQuestion(questionData) {
   try {
@@ -153,7 +153,7 @@ async function addQuestion(questionData) {
 /**
  * Retrieves a question from the database
  * @param {string} questionId - The question's id
- * @returns {QuestionData | Error} The question data or an error message
+ * @returns {QuestionData | DatabaseError} The question data or an error message
  */
 async function getQuestion(questionId) {
   try {
@@ -176,7 +176,7 @@ async function getQuestion(questionId) {
  * Updates a question in the database. Completely overwrites, so all fields in data must be present and valid.
  * @param {string} questionId - The question's id
  * @param {QuestionData} data - The question data
- * @returns {QuestionData | Error} The question data
+ * @returns {QuestionData | DatabaseError} The question data
  */
 async function updateQuestion(questionId, data) {
   try {
@@ -202,7 +202,7 @@ async function updateQuestion(questionId, data) {
 /**
  * Deletes a question from the database
  * @param {string} questionId - The question's id
- * @returns {void | Error}
+ * @returns {void | DatabaseError}
  */
 async function deleteQuestion(questionId) {
   try {

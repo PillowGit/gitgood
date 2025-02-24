@@ -4,7 +4,7 @@
 
 /**
  * Error message object
- * @typedef {Object} Error
+ * @typedef {Object} DatabaseError
  * @property {string} error - The error message
  */
 
