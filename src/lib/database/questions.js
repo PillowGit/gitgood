@@ -1,7 +1,10 @@
-import { dateToTimestamp } from "@/lib/epoch";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
-import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
+import {
+  dateToTimestamp,
+  generateRandomString,
+  deepCopy,
+} from "@/lib/utilities";
 
 import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
 
@@ -209,22 +212,6 @@ async function deleteQuestion(questionId) {
     console.log("Caught error while deleting question from database", e);
     return { error: e.message };
   }
-}
-
-/**
- * Deep copies an object recursively
- * @param {any} obj - The object to copy
- * @returns {any} The copied object
- */
-function deepCopy(obj) {
-  if (typeof obj !== "object" || obj === null) {
-    return obj;
-  }
-  const copy = Array.isArray(obj) ? [] : {};
-  for (let key in obj) {
-    copy[key] = deepCopy(obj[key]);
-  }
-  return copy;
 }
 
 /**
