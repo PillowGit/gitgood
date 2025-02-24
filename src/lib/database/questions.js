@@ -16,8 +16,10 @@ const base_question_data = {
     title: "Example Title",
     difficulty_sum: 0,
     difficulty_votes: 0,
+    difficulty: 0,
     votes_bad: 0,
     votes_good: 0,
+    votes_sum: 0,
     tags: {
       array: false,
       string: false,

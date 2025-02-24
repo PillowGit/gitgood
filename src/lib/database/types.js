@@ -77,8 +77,10 @@
  * @property {string} title - The title of the question
  * @property {number} difficulty_sum - The sum of the difficulty ratings of the question
  * @property {number} difficulty_votes - The number of difficulty ratings given to the question
+ * @property {number} difficulty - The average difficulty rating of the question
  * @property {number} votes_bad - The number of "bad" votes given to the question
  * @property {number} votes_good - The number of "good" votes given to the question
+ * @property {number} votes_sum - The sum of the votes given to the question
  * @property {Tags} tags - The tags associated with the question
  * @property {string} questionid - The id of the question
  * @property {string[]} languages - The languages the question is available in
