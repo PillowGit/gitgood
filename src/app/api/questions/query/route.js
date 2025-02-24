@@ -1,29 +1,13 @@
-import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth";
 
-import {
-  getQuestion,
-  getBaseQuestionData,
-  addQuestion,
-} from "@/lib/database/questions";
+import { getBaseQueryOptions, queryQuestions } from "@/lib/database/queries";
+import { getBaseQuestionData, addQuestion } from "@/lib/database/questions";
 
 export async function GET(req, { params }) {
-  const base = getBaseQuestionData();
-  base.description = `Test question made on ${new Date().toISOString()}`;
-  base.code.push({
-    language: "javascript",
-    inputs: [],
-    template: [],
-    solution: [],
-    tester: [],
+  const options = getBaseQueryOptions();
+  const questions = await queryQuestions(options);
+  const ids = questions.map((question) => question.questionid);
+  return NextResponse.json({
+    data: `Queried the following question ids: ${ids}`,
   });
-
-  const res = await addQuestion(base);
-
-  if ("error" in res) {
-    return NextResponse.json(res, { status: 400 });
-  } else {
-    return NextResponse.json(res);
-  }
 }
