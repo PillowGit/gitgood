@@ -133,7 +133,8 @@
  * @property {string} order_by - The field to order by. Can be empty string, "difficulty", "votes", "updated", or "created"
  * @property {boolean} order_asc - Whether to order in ascending order
  * @property {number} limit - The maximum number of results to return. Absolute max is 20
- * @property {string} start_after - The question ID to start after. Leave empty if not wanted
+ * @property {string} start_after - The question ID to start after. Leave empty if not wanted. Cannot have both start_after and start_at
+ * @property {string} start_at - The question ID to start at. Leave empty if not wanted. Cannot have both start_after and start_at
  * @property {string} difficulty - The difficulty to filter by. "easy", "medium", "hard", or empty string. Easy is 0.0-3.2, medium is 3.3-6.6, hard is 6.7-10.0, empty is no filter
  * @property {string} difficulty_range - The difficulty range to filter by, if custom range is wanted. Format is "0.0-10.0". Range is inclusive and must be between 0.0-10.0. Leave empty if not wanted. Only gets checked if "difficulty" is empty
  * @property {string} author - The ID of the author to filter by. Leave empty if not wanted
