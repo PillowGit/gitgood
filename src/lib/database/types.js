@@ -121,3 +121,20 @@
  * @property {boolean} points_are_public - Whether the user's points are displayed on their profile
  * @property {boolean} ownership_is_public - Whether the user's name appears on challenges they create
  */
+
+//
+// Data Query Types
+//
+
+/**
+ * An object defining options for a query. All fields are required. Leave fields empty if not needed/wanted.
+ * @typedef {Object} QueryOptions
+ * @property {Tags} tags - The tags to filter by
+ * @property {string} order_by - The field to order by. Can be empty string, "difficulty", "votes", "updated", or "created"
+ * @property {boolean} order_asc - Whether to order in ascending order
+ * @property {number} limit - The maximum number of results to return. Absolute max is 20
+ * @property {string} difficulty - The difficulty to filter by. "easy", "medium", "hard", or empty string. Easy is 0.0-3.2, medium is 3.3-6.6, hard is 6.7-10.0, empty is no filter
+ * @property {string} difficulty_range - The difficulty range to filter by, if custom range is wanted. Format is "0.0-10.0". Range is inclusive and must be between 0.0-10.0. Leave empty if not wanted. Only gets checked if "difficulty" is empty
+ * @property {string} author - The ID of the author to filter by. Leave empty if not wanted
+ * @property {string} language - The language to filter by. Leave empty if not wanted
+ */
