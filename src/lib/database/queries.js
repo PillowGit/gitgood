@@ -156,6 +156,8 @@ async function queryQuestions(options) {
     const query_params = [];
     query_params.push(collection(db, "questions-short"));
 
+    // Never show unlisted questions
+    query_params.push(where("display_publicly", "==", true));
     // Filter by language
     if (options.language !== "") {
       query_params.push(where("languages", "array-contains", options.language));
