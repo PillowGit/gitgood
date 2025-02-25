@@ -1,31 +1,7 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
-import { LRUCache } from "lru-cache";
 
-const cache = new LRUCache({ max: 500, ttl: 1000 * 60 * 5 });
-
-/**
- * The base user data structure
- * @typedef {Object} UserData
- * @property {string[]} accepted - The list of challenges the user has completed
- * @property {string[]} attempted - The list of challenges the user has attempted
- * @property {string[]} created - The list of challenges the user has created
- * @property {string} github_id - The user's github id
- * @property {string} username - The user's username
- * @property {string} display_name - The user's display name
- * @property {string} avatar - The user's avatar URL (github url)
- * @property {number} points_accumulated - The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
- * @property {boolean} can_create - Whether the user can create challenges (used for banning users who violate terms)
- * @property {boolean} accepted_are_public - Whether the user's accepted challenges are displayed on their profile
- * @property {boolean} points_are_public - Whether the user's points are displayed on their profile
- * @property {boolean} ownership_is_public - Whether the user's name appears on challenges they create
- */
-
-/**
- * Error message object
- * @typedef {Object} Error
- * @property {string} error - The error message
- */
+import /** @type {Error}, @type {UserData} */ "@/lib/database/types";
 
 /** @type {UserData} */
 const base_user_data = {
@@ -52,29 +28,29 @@ const base_user_data = {
  * @returns {UserData | Error} The user's data
  */
 async function addUser(userId, username, display_name, avatar) {
-  const userData = {
-    ...base_user_data,
-    github_id: userId,
-    username,
-    display_name,
-    avatar,
-  };
-  const result = await updateUser(userId, userData);
-  return result;
+  try {
+    const userData = {
+      ...base_user_data,
+      github_id: userId,
+      username,
+      display_name,
+      avatar,
+    };
+    const result = await updateUser(userId, userData);
+    return result;
+  } catch (e) {
+    console.log("Caught error while adding user to database", e);
+    return { error: e.message };
+  }
 }
 
-/**  Retrieves a user from the cache/database, caches result and returns
+/**  Retrieves a user from the database
  * @param {string} userId - The user's id
  * @returns {UserData | Error} The user's data or an error message
  */
 async function getUser(userId) {
   try {
-    // Check cache
-    const cachedUser = cache.get(userId);
-    if (cachedUser) {
-      return cachedUser;
-    }
-    // Fetch from Firestore if not cached
+    // Fetch from Firestore
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
     // If not exist, return error
@@ -82,9 +58,9 @@ async function getUser(userId) {
       return { error: "User not found" };
     }
     const userData = userSnap.data();
-    cache.set(userId, userData);
     return userData;
   } catch (e) {
+    console.log("Caught error while getting user from database", e);
     return { error: e.message };
   }
 }
@@ -100,9 +76,9 @@ async function updateUser(userId, data, merge = true) {
   try {
     const userRef = doc(db, "users", userId);
     await setDoc(userRef, data, { merge });
-    cache.set(userId, data);
     return data;
   } catch (e) {
+    console.log("Caught error while updating user in database ", e);
     return { error: e.message };
   }
 }
@@ -115,9 +91,9 @@ async function updateUser(userId, data, merge = true) {
 async function deleteUser(userId) {
   try {
     const userRef = doc(db, "users", userId);
-    await setDoc(userRef, null);
-    cache.del(userId);
+    await deleteDoc(userRef);
   } catch (e) {
+    console.log("Caught error while deleting user from database", e);
     return { error: e.message };
   }
 }

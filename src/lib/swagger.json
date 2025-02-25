@@ -1,0 +1,442 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GitGood",
+    "version": "1.0.0",
+    "description": "The public API for GitGood"
+  },
+  "paths": {
+    "/api/docs": {
+      "get": {
+        "summary": "Retrieve OpenAPI specification.",
+        "description": "Retrieve OpenAPI specification in JSON format for API documentation.",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved OpenAPI specification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "The OpenAPI specification."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/questions/{questionId}": {
+      "get": {
+        "summary": "Retrieve question data for a specific question ID.",
+        "description": "Retrives all the information for the specified question",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "questionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the question to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Question retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The full description for the question."
+                    },
+                    "code": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "language": {
+                            "type": "string",
+                            "description": "The language the code is written in."
+                          },
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "description": "Lines of code that define the \"input\" section of a code challenge."
+                            }
+                          },
+                          "template": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "description": "Lines of code that define the \"template\" section of a code challenge. This is the code that the user will modify."
+                            }
+                          },
+                          "solution": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "description": "Lines of code that define the \"solution\" section of a code challenge. This is the correct answer."
+                            }
+                          },
+                          "tester": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "description": "Lines of code that define the \"tester\" section of a code challenge. This is the code that will test the user's solution and compare with the solution."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "test_cases": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ANSWER": {
+                            "type": "string",
+                            "description": "The expected output of the test case."
+                          },
+                          "key": {
+                            "type": "string",
+                            "description": "Other key-value pairs exist, where the key can be any string. The value associated with these other keys are also strings."
+                          }
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "The title of the question."
+                        },
+                        "difficulty_sum": {
+                          "type": "number",
+                          "description": "The sum of the difficulty ratings of the question."
+                        },
+                        "difficulty_votes": {
+                          "type": "number",
+                          "description": "The amount of difficulty ratings given to the question."
+                        },
+                        "difficulty": {
+                          "type": "number",
+                          "description": "The average difficulty rating of the question."
+                        },
+                        "votes_bad": {
+                          "type": "number",
+                          "description": "The downvotes given to the question."
+                        },
+                        "votes_good": {
+                          "type": "number",
+                          "description": "The upvotes given to the question."
+                        },
+                        "votes_sum": {
+                          "type": "number",
+                          "description": "The total votes given to the question."
+                        },
+                        "questionid": {
+                          "type": "string",
+                          "description": "The ID of the question."
+                        },
+                        "display_publicly": {
+                          "type": "boolean",
+                          "description": "Whether the question is public."
+                        },
+                        "author_id": {
+                          "type": "string",
+                          "description": "The ID of the author of the question."
+                        },
+                        "author_name": {
+                          "type": "string",
+                          "description": "The name of the author of the question."
+                        },
+                        "languages": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "The available coding languages for the question."
+                        },
+                        "date_created": {
+                          "type": "object",
+                          "properties": {
+                            "seconds": {
+                              "type": "number",
+                              "description": "The number of seconds since the epoch."
+                            },
+                            "nanoseconds": {
+                              "type": "number",
+                              "description": "The number of nanoseconds since the epoch."
+                            }
+                          }
+                        },
+                        "date_updated": {
+                          "type": "object",
+                          "properties": {
+                            "seconds": {
+                              "type": "number",
+                              "description": "The number of seconds since the epoch."
+                            },
+                            "nanoseconds": {
+                              "type": "number",
+                              "description": "The number of nanoseconds since the epoch."
+                            }
+                          }
+                        },
+                        "tags": {
+                          "type": "object",
+                          "properties": {
+                            "array": {
+                              "type": "boolean",
+                              "description": "The array tag."
+                            },
+                            "string": {
+                              "type": "boolean",
+                              "description": "The string tag."
+                            },
+                            "hash_table": {
+                              "type": "boolean",
+                              "description": "The hash_table tag."
+                            },
+                            "dp": {
+                              "type": "boolean",
+                              "description": "The dp tag."
+                            },
+                            "math": {
+                              "type": "boolean",
+                              "description": "The math tag."
+                            },
+                            "sorting": {
+                              "type": "boolean",
+                              "description": "The sorting tag."
+                            },
+                            "greedy": {
+                              "type": "boolean",
+                              "description": "The greedy tag."
+                            },
+                            "dfs": {
+                              "type": "boolean",
+                              "description": "The dfs tag."
+                            },
+                            "bfs": {
+                              "type": "boolean",
+                              "description": "The bfs tag."
+                            },
+                            "binary_search": {
+                              "type": "boolean",
+                              "description": "The binary search tag."
+                            },
+                            "matrix": {
+                              "type": "boolean",
+                              "description": "The matrix tag."
+                            },
+                            "tree": {
+                              "type": "boolean",
+                              "description": "The tree tag."
+                            },
+                            "bit_manipulation": {
+                              "type": "boolean",
+                              "description": "The bit manipulation tag."
+                            },
+                            "two_pointer": {
+                              "type": "boolean",
+                              "description": "The two pointer tag."
+                            },
+                            "heap": {
+                              "type": "boolean",
+                              "description": "The heap tag."
+                            },
+                            "stack": {
+                              "type": "boolean",
+                              "description": "The stack tag."
+                            },
+                            "graph": {
+                              "type": "boolean",
+                              "description": "The graph tag."
+                            },
+                            "sliding_window": {
+                              "type": "boolean",
+                              "description": "The sliding window tag."
+                            },
+                            "back_tracking": {
+                              "type": "boolean",
+                              "description": "The back tracking tag."
+                            },
+                            "linked_list": {
+                              "type": "boolean",
+                              "description": "The linked list tag."
+                            },
+                            "set": {
+                              "type": "boolean",
+                              "description": "The set tag."
+                            },
+                            "queue": {
+                              "type": "boolean",
+                              "description": "The queue tag."
+                            },
+                            "memo": {
+                              "type": "boolean",
+                              "description": "The memo tag."
+                            },
+                            "recursion": {
+                              "type": "boolean",
+                              "description": "The recursion tag."
+                            },
+                            "hashing": {
+                              "type": "boolean",
+                              "description": "The hashing tag."
+                            },
+                            "bit_mask": {
+                              "type": "boolean",
+                              "description": "The bit mask tag."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Question ID is not present or field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Question not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{userId}": {
+      "get": {
+        "summary": "Retrieve user data for a specific user ID.",
+        "description": "# When the request is coming from an authorized client:\n\n**1. If the user doesn't exist in our database, but that user is requesting their data**\n- We create an account for them, return their data after finished\n\n**2. If the user doesn't exist in our database, and the requester is not the person whose data they want**\n- Return 404. The user does not exist\n\n**3. If the user exists in the database and the requester is that user**\n- Return to them all of their data\n\n**4. If the user exists in the database, but the requester is not that user**\n- Send them only public data of the user\n\n# When the request is coming from an unauthorized client:\n\n**1. If the user doesn't exist in our database**\n- Return 404. The user does not exist\n\n**2. If the user does exist in our database**\n- Send them only public data of the user\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "github_id": {
+                      "type": "string",
+                      "description": "The user's github id. Always included."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The user's username. Always included."
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "description": "The user's display name. Always included."
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "description": "The user's avatar URL (github url). Always included."
+                    },
+                    "accepted": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The list of challenges the user has completed."
+                    },
+                    "created": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The list of challenges the user has created."
+                    },
+                    "points_accumulated": {
+                      "type": "number",
+                      "description": "The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User ID is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}
