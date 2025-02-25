@@ -9,7 +9,19 @@ export default function Page() {
   const editorSettings = {
     language: "python",
     code: `class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:`,
+    def twoSum(self, nums: list[int], target: int) -> list[int]:
+      # Add code here
+
+if __name__ == "__main__":
+  nums = [2, 7, 11, 15]
+  target = 9
+  expected = [0, 1]
+  solution = Solution()
+  result = solution.twoSum(nums, target)
+  if result != expected: print("Incorrect!")
+  else: print("Correct!")
+  print(f"Result: {result}")
+  print(f"Expected: {expected}")`,
     theme: "vs-dark",
   };
 
