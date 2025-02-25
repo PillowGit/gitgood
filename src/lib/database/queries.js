@@ -225,8 +225,6 @@ async function queryQuestions(options) {
     let q = query(...query_params);
 
     // Get the documents
-    console.log(`Querying questions with ${query_params.length} parameters`);
-    console.dir(query_params);
     const querySnapshot = await getDocs(q);
     const metadata = [];
     querySnapshot.forEach((queryDocSnap) => {
