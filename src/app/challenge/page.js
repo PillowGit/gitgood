@@ -95,7 +95,7 @@ if __name__ == "__main__":
             onClick={runCode}>
             Run Code
           </button>
-          <p className="mt-2 overflow-auto">{output}</p>
+          <pre className="mt-2 overflow-auto">{output}</pre>
         </div>
       </div>
     </div>
