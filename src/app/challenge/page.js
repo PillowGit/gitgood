@@ -24,12 +24,27 @@ export default function Page() {
     ]
   };
 
-  function runCode() {
+  async function runCode() {
     if (editorRef.current) {
       const code = editorRef.current.getValue();
+      setOutput(`Running...\n`);
       try {
-        // TODO: Replace this with an API call to actually run the code
-        setOutput(`Running...\n`);
+        const response = await fetch("/api/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+              code,
+              language: editorSettings.language
+            }),
+        });
+
+        const result = await response.json();
+
+        setOutput(
+          result.compile?.stderr
+            ? `Compilation Error:\n${result.compile.stderr}`
+            : result.run.output || "No output"
+        );
       } catch (error) {
         setOutput(`Error: ${error.message}`);
       }
