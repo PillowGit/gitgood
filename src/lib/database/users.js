@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
 
-import /** @type {Error}, @type {UserData} */ "@/lib/database/types";
+import /** @type {DatabaseError}, @type {UserData} */ "@/lib/database/types";
 
 /** @type {UserData} */
 const base_user_data = {
@@ -25,7 +25,7 @@ const base_user_data = {
  * @param {string} username - The user's username
  * @param {string} display_name - The user's display name
  * @param {string} avatar - The user's avatar URL
- * @returns {UserData | Error} The user's data
+ * @returns {UserData | DatabaseError} The user's data
  */
 async function addUser(userId, username, display_name, avatar) {
   try {
@@ -46,7 +46,7 @@ async function addUser(userId, username, display_name, avatar) {
 
 /**  Retrieves a user from the database
  * @param {string} userId - The user's id
- * @returns {UserData | Error} The user's data or an error message
+ * @returns {UserData | DatabaseError} The user's data or an error message
  */
 async function getUser(userId) {
   try {
@@ -70,7 +70,7 @@ async function getUser(userId) {
  * @param {string} userId - The user's id
  * @param {UserData} data - The user's data
  * @param {boolean} [merge=true] - Whether to merge the data with the existing data, or just replace it
- * @returns {UserData | Error} The user's data
+ * @returns {UserData | DatabaseError} The user's data
  */
 async function updateUser(userId, data, merge = true) {
   try {
@@ -86,7 +86,7 @@ async function updateUser(userId, data, merge = true) {
 /**
  * Deletes a user from the database
  * @param {string} userId - The user's id
- * @returns {void | Error}
+ * @returns {void | DatabaseError}
  */
 async function deleteUser(userId) {
   try {

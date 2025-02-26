@@ -3,37 +3,6 @@ import { NextResponse } from "next/server";
 import { getQuestion } from "@/lib/database/questions";
 
 /**
- * The available tags for a question
- * @typedef {Object} Tags
- * @property {boolean} array - The array tag
- * @property {boolean} string - The string tag
- * @property {boolean} hash_table - The hash_table tag
- * @property {boolean} dp - The dp tag
- * @property {boolean} math - The math tag
- * @property {boolean} sorting - The sorting tag
- * @property {boolean} greedy - The greedy tag
- * @property {boolean} dfs - The dfs tag
- * @property {boolean} bfs - The bfs tag
- * @property {boolean} binary_search - The binary_search tag
- * @property {boolean} matrix - The matrix tag
- * @property {boolean} tree - The tree tag
- * @property {boolean} bit_manipulation - The bit_manipulation tag
- * @property {boolean} two_pointer - The two_pointer tag
- * @property {boolean} heap - The heap tag
- * @property {boolean} stack - The stack tag
- * @property {boolean} graph - The graph tag
- * @property {boolean} sliding_window - The sliding_window tag
- * @property {boolean} back_tracking - The back_tracking tag
- * @property {boolean} linked_list - The linked_list tag
- * @property {boolean} set - The set tag
- * @property {boolean} queue - The queue tag
- * @property {boolean} memo - The memo tag
- * @property {boolean} recursion - The recursion tag
- * @property {boolean} hashing - The hashing tag
- * @property {boolean} bit_mask - The bit_mask tag
- */
-
-/**
  * @openapi
  * /api/questions/{questionId}:
  *  get:
