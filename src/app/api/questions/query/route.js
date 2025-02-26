@@ -48,20 +48,7 @@ import {
  *             order_by:
  *               type: string
  *               example: "difficulty"
- *         description: (Optional) The field to order by. Can be "", "difficulty", "votes", "updated", or "created"
- *       - in: body
- *         name: order_asc
- *         required: false
- *         schema:
- *           type: object
- *           properties:
- *             limit:
- *               type: number
- *               example: 10
- *             order_asc:
- *               type: boolean
- *               example: true
- *         description: (Optional) Whether to order in ascending order. Default is false
+ *         description: (Optional) The field to order by. All orderings happen in descending order. Can be "", "difficulty", "votes", "updated", or "created"
  *       - in: body
  *         name: start_after
  *         required: false
@@ -129,7 +116,7 @@ import {
  *             author:
  *               type: string
  *               example: "104609738"
- *         description: (Optional) The ID of the author to filter by
+ *         description: (Optional) The ID of the author to filter by. Trumps all tags besides limit. This will only return the public questions of the author, with no other ordering or filtering.
  *       - in: body
  *         name: language
  *         required: false
