@@ -339,6 +339,11 @@ export async function POST(req, { params }) {
     }
 
     const questions = await queryQuestions(queryData);
+
+    if (questions.error) {
+      return NextResponse.json({ error: questions.error }, { status: 500 });
+    }
+
     return NextResponse.json(questions);
   } catch (e) {
     console.log("Server error in GET /api/questions/query", e);
