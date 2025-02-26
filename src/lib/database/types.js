@@ -140,3 +140,19 @@
  * @property {string} author - The ID of the author to filter by. Leave empty if not wanted
  * @property {string} language - The language to filter by. Leave empty if not wanted
  */
+
+//
+// Public User Data Type
+//
+
+/**
+ * The publicly available user data structure
+ * @typedef {Object} PublicUserData
+ * @property {string[] | undefined} accepted - (Optional) The list of challenges the user has completed
+ * @property {string[] | undefined} created - (Optional) The list of challenges the user has created
+ * @property {string} github_id - The user's github id
+ * @property {string} username - The user's username
+ * @property {string} display_name - The user's display name
+ * @property {string} avatar - The user's avatar URL (github url)
+ * @property {number | undefined} points_accumulated - (Optional) The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
+ */
