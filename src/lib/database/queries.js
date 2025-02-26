@@ -230,7 +230,6 @@ async function queryQuestions(options) {
     const querySnapshot = await getDocs(q);
     const metadata = [];
     querySnapshot.forEach((queryDocSnap) => {
-      console.log(queryDocSnap.data());
       metadata.push(queryDocSnap.data());
     });
     return metadata;
