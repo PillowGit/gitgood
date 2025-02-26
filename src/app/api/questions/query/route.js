@@ -9,7 +9,7 @@ import {
 /**
  * @openapi
  * /api/questions/query:
- *   get:
+ *   post:
  *     summary: Query a list of questions
  *     description: Query a list of questions from the database given some query parameters
  *     parameters:
@@ -288,7 +288,7 @@ import {
  *                   type: string
  *                   description: The error message.
  */
-export async function GET(req, { params }) {
+export async function POST(req, { params }) {
   try {
     const data = await req.json();
 

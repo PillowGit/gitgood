@@ -340,7 +340,7 @@
       }
     },
     "/api/questions/query": {
-      "get": {
+      "post": {
         "summary": "Query a list of questions",
         "description": "Query a list of questions from the database given some query parameters",
         "parameters": [
