@@ -287,16 +287,6 @@ import {
  *                 error:
  *                   type: string
  *                   description: The error message.
- *       400:
- *         description: Unknown key is present.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   description: The error message.
  */
 export async function GET(req, { params }) {
   try {

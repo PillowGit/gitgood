@@ -717,6 +717,22 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Limit field is not present or field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
