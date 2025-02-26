@@ -94,6 +94,16 @@ function validateQueryOptions(options) {
       return { status: false, reason: `Unknown tag: ${key}` };
     }
   }
+  // Ensure only one or zero tags are present
+  const sort_tags = Object.keys(options.tags).filter(
+    (tag) => options.tags[tag]
+  );
+  if (sort_tags.length > 1) {
+    return {
+      status: false,
+      reason: "Cannot filter by more than one tag at a time",
+    };
+  }
   // Ensure order_by is valid ("", "difficulty", "votes", "updated", "created")
   if (
     options.order_by !== "" &&
@@ -189,11 +199,15 @@ async function queryQuestions(options) {
       query_params.push(where("difficulty", "<=", range[1]));
     }
     // Filter by tags
-    for (const tag of Object.keys(options.tags)) {
-      if (options.tags[tag]) {
-        query_params.push(where(`tags.${tag}`, "==", true));
-      }
+    const sort_tags = Object.keys(options.tags).filter(
+      (tag) => options.tags[tag]
+    );
+    if (sort_tags.length > 1) {
+      return { error: "Cannot filter by more than one tag at a time" };
+    } else if (sort_tags.length === 1) {
+      query_params.push(where(`tags.${sort_tags[0]}`, "==", true));
     }
+
     // Order by
     let ordering = "votes_sum";
     if (options.order_by === "difficulty") {
@@ -230,7 +244,6 @@ async function queryQuestions(options) {
     const querySnapshot = await getDocs(q);
     const metadata = [];
     querySnapshot.forEach((queryDocSnap) => {
-      console.log(queryDocSnap.data());
       metadata.push(queryDocSnap.data());
     });
     return metadata;

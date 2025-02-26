@@ -4,6 +4,9 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
+import { getDefaultQuery, makeQuery } from "@/lib/proxies/queries";
+import { deepCopy } from "@/lib/utilities";
+
 export default function ClientComponent() {
   // Auth session
   const { data: session } = useSession();
@@ -12,11 +15,22 @@ export default function ClientComponent() {
   const slug = params.slug;
 
   async function testQuery() {
-    fetch("/api/questions/query", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        alert(JSON.stringify(data));
-      });
+    const query_options = getDefaultQuery();
+    query_options.limit = 5;
+
+    const response = await makeQuery(query_options);
+
+    if (response.error) {
+      alert(response.error);
+      return;
+    } else {
+      let str = "";
+      let i = 1;
+      for (const question of response) {
+        str += `${i++}. ${question.questionid}\n`;
+      }
+      alert(str);
+    }
   }
 
   async function testQuestion() {

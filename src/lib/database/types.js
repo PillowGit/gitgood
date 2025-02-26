@@ -129,7 +129,7 @@
 /**
  * An object defining options for a query. All fields are required. Leave fields empty if not needed/wanted.
  * @typedef {Object} QueryOptions
- * @property {Tags} tags - The tags to filter by
+ * @property {Tags} tags - The tags to filter by. Only one can be marked as true, as you can only filter by one tag at a time.
  * @property {string} order_by - The field to order by. Can be empty string, "difficulty", "votes", "updated", or "created"
  * @property {boolean} order_asc - Whether to order in ascending order
  * @property {number} limit - The maximum number of results to return. Absolute max is 20
