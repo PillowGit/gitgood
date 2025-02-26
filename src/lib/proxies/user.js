@@ -2,7 +2,6 @@
  * @param {string} id - The id of the user to fetch
  * @returns {Promise<UserData | PublicUserData | DatabaseError>} - A promise that, when resolved, returns either the users full data (if authorized), the users public data (if not authorized), or the error if failed
  */
-
 async function proxyGetUser(userId) {
     try {
         const response = await fetch(`/api/users/${userId}`, { cache: "no-store" });
