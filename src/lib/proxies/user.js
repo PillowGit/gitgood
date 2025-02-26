@@ -26,4 +26,4 @@ async function proxyGetUser(userId) {
     }
 }
 
-export { proxyGetUser }
+export { proxyGetUser };
