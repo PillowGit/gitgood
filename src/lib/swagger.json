@@ -361,6 +361,25 @@
           },
           {
             "in": "body",
+            "name": "filter_tag",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "number",
+                  "example": 10
+                },
+                "filter_tag": {
+                  "type": "string",
+                  "example": "array"
+                }
+              }
+            },
+            "description": "(Optional) The field to order by. Can be \"\", \"difficulty\", \"votes\", \"updated\", or \"created\""
+          },
+          {
+            "in": "body",
             "name": "order_by",
             "required": false,
             "schema": {

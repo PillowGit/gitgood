@@ -24,6 +24,19 @@ import {
  *               example: 10
  *         description: (Required) The maximum number of questions to return. Must be between 1-20
  *       - in: body
+ *         name: filter_tag
+ *         required: false
+ *         schema:
+ *           type: object
+ *           properties:
+ *             limit:
+ *               type: number
+ *               example: 10
+ *             filter_tag:
+ *               type: string
+ *               example: "array"
+ *         description: (Optional) The field to order by. Can be "", "difficulty", "votes", "updated", or "created"
+ *       - in: body
  *         name: order_by
  *         required: false
  *         schema:
@@ -304,7 +317,21 @@ export async function POST(req, { params }) {
       );
     }
 
-    const queryData = { ...getBaseQueryOptions(), ...data };
+    const baseQuery = getBaseQueryOptions();
+
+    if (data.filter_tag && baseQuery.tags[data.filter_tag] === undefined) {
+      return NextResponse.json(
+        { error: "Filter tag is not valid" },
+        { status: 400 }
+      );
+    }
+    if (data.filter_tag) {
+      baseQuery.tags[data.filter_tag] = true;
+    }
+
+    const queryData = { ...baseQuery, ...data };
+    delete queryData.filter_tag;
+
     const validation = validateQueryOptions(queryData);
 
     if (validation.reason) {
