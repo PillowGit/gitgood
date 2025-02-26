@@ -1,4 +1,4 @@
-import { getBaseQueryOptions } from "../database/queries";
+import { getBaseQueryOptions } from "@/lib/database/queries";
 
 /**
  * Returns the default query options for the question database, meant to be modified as needed then passed into the "makeQuery" function
