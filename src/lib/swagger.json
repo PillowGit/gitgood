@@ -497,7 +497,7 @@
                 }
               }
             },
-            "description": "(Optional) The field to order by. Can be \"\", \"difficulty\", \"votes\", \"updated\", or \"created\""
+            "description": "(Optional) The field to order by. Can be \"\", \"difficulty\", \"votes\", \"updated\", or \"created\". Empty string will default to \"votes\"."
           },
           {
             "in": "body",
@@ -616,25 +616,6 @@
               }
             },
             "description": "(Optional) The ID of the author to filter by. Trumps all tags besides limit. This will only return the public questions of the author, with no other ordering or filtering."
-          },
-          {
-            "in": "body",
-            "name": "language",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "limit": {
-                  "type": "number",
-                  "example": 10
-                },
-                "language": {
-                  "type": "string",
-                  "example": "c++"
-                }
-              }
-            },
-            "description": "(Optional) The language to filter by"
           }
         ],
         "responses": {

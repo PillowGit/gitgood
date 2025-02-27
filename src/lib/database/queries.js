@@ -82,7 +82,10 @@ function validateQueryOptions(options) {
     }
   }
   // Ensure given tag is valid
-  if (options.filter_tag !== "" && !default_tags[options.filter_tag]) {
+  if (
+    options.filter_tag !== "" &&
+    default_tags[options.filter_tag] === undefined
+  ) {
     return { status: false, reason: `Invalid tag: ${options.filter_tag}` };
   }
   // Ensure order_by is valid ("", "difficulty", "votes", "updated", "created")
@@ -108,7 +111,7 @@ function validateQueryOptions(options) {
     };
   }
   // Ensure difficulty_range is valid ("" or "0.0-10.0")
-  if (difficulty === "" && options.difficulty_range !== "") {
+  if (options.difficulty === "" && options.difficulty_range !== "") {
     if (
       !options.difficulty_range.match(/^(\d\.\d)-(\d\.\d)$/) ||
       options.difficulty_range
@@ -148,9 +151,9 @@ async function queryQuestions(options) {
       return { error: validation.reason };
     }
 
-    if (author !== "") {
+    if (options.author !== "") {
       // Make sure the requested author actually exists
-      const user = await getUser(author);
+      const user = await getUser(options.author);
       if (user.error) {
         return {
           error: `Author ID given during query, but failed to fetch Author due to: ${user.error}`,
@@ -162,7 +165,7 @@ async function queryQuestions(options) {
       query_params.push(collection(db, "questions-short"));
 
       // Filter by author
-      query_params.push(where("author_id", "==", author));
+      query_params.push(where("author_id", "==", options.author));
 
       // Allow cursoring through the results
       if (options.start_after !== "") {
@@ -198,18 +201,18 @@ async function queryQuestions(options) {
 
       // Filter by difficulty first
       if (options.difficulty !== "") {
-        const lower =
-          options.difficulty === "easy"
-            ? 0.0
-            : options.difficulty === "medium"
-            ? 3.3
-            : 6.7;
-        const upper =
-          options.difficulty === "easy"
-            ? 3.2
-            : options.difficulty === "medium"
-            ? 6.6
-            : 10.0;
+        let lower = 0.0;
+        let upper = 0.0;
+        if (options.difficulty === "easy") {
+          lower = 0.0;
+          upper = 3.2;
+        } else if (options.difficulty === "medium") {
+          lower = 3.3;
+          upper = 6.6;
+        } else if (options.difficulty === "hard") {
+          lower = 6.7;
+          upper = 10.0;
+        }
         query_params.push(where("difficulty", ">=", lower));
         query_params.push(where("difficulty", "<=", upper));
         // Filter by range if no difficulty and range filled out

@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import { getDefaultQuery, makeQuery } from "@/lib/proxies/queries";
+
+import { getBaseQuestionData } from "@/lib/database/questions";
 import { deepCopy } from "@/lib/utilities";
 
 export default function ClientComponent() {
@@ -15,16 +17,37 @@ export default function ClientComponent() {
   const slug = params.slug;
 
   async function testQuery() {
-    const query_options = getDefaultQuery();
-    query_options.limit = 5;
+    const default_query_options = getDefaultQuery();
+    default_query_options.limit = 5;
+    default_query_options.difficulty = "easy";
+    const tags = Object.keys(deepCopy(getBaseQuestionData().metadata.tags));
+    tags.push("");
+    const orderings = ["difficulty", "votes", "updated", "created"];
 
+    // Have this generate "create new index" links for each combination of tag and ordering
+
+    // For each tag
+    for (const tag of tags) {
+      // For each ordering
+      for (const ordering of orderings) {
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+        const options = deepCopy(default_query_options);
+        options.filter_tag = tag;
+        options.order_by = ordering;
+        const response = await makeQuery(options);
+      }
+    }
+
+    alert("all done");
+
+    return;
     const response = await makeQuery(query_options);
 
     if (response.error) {
       alert(response.error);
       return;
     } else {
-      let str = "";
+      let str = "Query Results:\n";
       let i = 1;
       for (const question of response) {
         str += `${i++}. ${question.questionid}\n`;
