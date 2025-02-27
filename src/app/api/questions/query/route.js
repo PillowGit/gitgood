@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 import {
   getBaseQueryOptions,
@@ -35,7 +37,7 @@ import {
  *             filter_tag:
  *               type: string
  *               example: "array"
- *         description: (Optional) The field to order by. Can be "", "difficulty", "votes", "updated", or "created"
+ *         description: (Optional) The field to order by. Can be "", "difficulty", "votes", "updated", or "created". Empty string will default to "votes".
  *       - in: body
  *         name: order_by
  *         required: false
@@ -117,19 +119,6 @@ import {
  *               type: string
  *               example: "104609738"
  *         description: (Optional) The ID of the author to filter by. Trumps all tags besides limit. This will only return the public questions of the author, with no other ordering or filtering.
- *       - in: body
- *         name: language
- *         required: false
- *         schema:
- *           type: object
- *           properties:
- *             limit:
- *               type: number
- *               example: 10
- *             language:
- *               type: string
- *               example: "c++"
- *         description: (Optional) The language to filter by
  *     responses:
  *       200:
  *         description: Returns a list of question metadata objects that match the query
@@ -292,46 +281,31 @@ export async function POST(req, { params }) {
   try {
     const data = await req.json();
 
-    if (data.limit === undefined) {
-      return NextResponse.json(
-        { error: "Limit field is not present" },
-        { status: 400 }
-      );
-    } else if (data.limit < 1 || data.limit > 20) {
-      return NextResponse.json(
-        { error: "Limit field is not valid" },
-        { status: 400 }
-      );
-    }
+    // Session data
+    const session = await getServerSession({ req, ...authOptions });
+    const github_id = session
+      ? session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1]
+      : null;
 
-    const baseQuery = getBaseQueryOptions();
-
-    if (data.filter_tag && baseQuery.tags[data.filter_tag] === undefined) {
-      return NextResponse.json(
-        { error: "Filter tag is not valid" },
-        { status: 400 }
-      );
-    }
-    if (data.filter_tag) {
-      baseQuery.tags[data.filter_tag] = true;
-    }
-
-    const queryData = { ...baseQuery, ...data };
-    delete queryData.filter_tag;
-
+    /** @type {QueryOptions} */
+    const queryData = { ...getBaseQueryOptions(), ...data };
     const validation = validateQueryOptions(queryData);
-
-    if (validation.reason) {
+    if (validation.reason !== undefined) {
       return NextResponse.json({ error: validation.reason }, { status: 400 });
     }
 
     const questions = await queryQuestions(queryData);
-
     if (questions.error) {
       return NextResponse.json({ error: questions.error }, { status: 500 });
     }
 
-    return NextResponse.json(questions);
+    if (queryData.author !== "") {
+      return NextResponse.json(
+        questions.filter((q) => q.author_id === github_id || q.display_publicly)
+      );
+    } else {
+      return NextResponse.json(questions);
+    }
   } catch (e) {
     console.log("Server error in GET /api/questions/query", e);
     return NextResponse.error();
