@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-
 /**
  * @openapi
  * /api/execute:
