@@ -4,10 +4,10 @@ const path = require("path");
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'GitGood',
-      version: '1.0.0',
+      title: "GitGood",
+      version: "1.0.0",
       description: "The public API for GitGood",
     },
   },

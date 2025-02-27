@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import "swagger-ui-react/swagger-ui.css"
-import "swagger-themes/themes/dark.css"
+import "swagger-ui-react/swagger-ui.css";
+import "swagger-themes/themes/dark.css";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
 
