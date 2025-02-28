@@ -98,7 +98,6 @@ function validateQuestionData(questionData) {
   }
   // Ensure all tags are present
   for (const key of Object.keys(base_question_data.metadata.tags)) {
-    console.log(base_question_data.metadata.tags);
     if (questionData.metadata.tags[key] === undefined) {
       return { status: false, reason: `Missing tag: ${key}` };
     }
