@@ -186,6 +186,7 @@ export async function POST(req) {
       !data.metadata ||
       !data.metadata.title ||
       typeof data.metadata.difficulty_votes !== "number" ||
+      typeof data.metadata.difficulty_sum !== "number" ||
       !Array.isArray(data.metadata.tags) ||
       !Array.isArray(data.metadata.languages) ||
       typeof data.metadata.display_publicly !== "boolean" ||
@@ -205,9 +206,10 @@ export async function POST(req) {
 
     // Create a tags object
     const baseQuestionData = getBaseQuestionData();
-    baseQuestionData.tags = {};
     data.metadata.tags.forEach((tag) => {
-      baseQuestionData.tags[tag] = true;
+      if (tag in baseQuestionData.metadata.tags) {
+        baseQuestionData.metadata.tags[tag] = true;
+      }
     });
 
     // Populate base question data
@@ -215,8 +217,9 @@ export async function POST(req) {
       ...baseQuestionData,
       description: data.description,
       metadata: {
+        ...baseQuestionData.metadata,
         ...data.metadata,
-        difficulty_sum: 1,
+        tags: baseQuestionData.metadata.tags,
         author_id: github_id,
         author_name: githubUser.login,
       },
@@ -226,7 +229,7 @@ export async function POST(req) {
 
     // Validate question data
     const validationError = validateQuestionData(questionData);
-    if (validationError) {
+    if (!validationError.status) {
       return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
