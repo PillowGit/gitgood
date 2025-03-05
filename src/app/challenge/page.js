@@ -29,11 +29,12 @@ if __name__ == "__main__":
 
   const challenge = {
     title: "Two Sum",
-    description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    description:
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
     tests: [
       { input: "nums = [2, 7, 11, 15], target = 9", output: "[0, 1]" },
-      { input: "nums = [2, 7, 11, 15], target = 9", output: "[0, 1]" }
-    ]
+      { input: "nums = [2, 7, 11, 15], target = 9", output: "[0, 1]" },
+    ],
   };
 
   async function runCode() {
@@ -45,9 +46,9 @@ if __name__ == "__main__":
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-              code,
-              language: editorSettings.language
-            }),
+            code,
+            language: editorSettings.language,
+          }),
         });
 
         const result = await response.json();
@@ -65,7 +66,6 @@ if __name__ == "__main__":
 
   return (
     <div className="flex h-screen">
-
       {/* Left Panel: Challenge */}
       <div className="w-1/3 p-5 border-r">
         <h1 className="text-xl font-bold ">{challenge.title}</h1>
@@ -75,8 +75,12 @@ if __name__ == "__main__":
         {challenge.tests.map((test, idx) => (
           <div key={idx} className="mt-2">
             <p className="font-semibold">Example {idx + 1}: </p>
-            <p className="text-sm"><b>Input:</b> {test.input}</p>
-            <p className="text-sm"><b>Output:</b> {test.output}</p>
+            <p className="text-sm">
+              <b>Input:</b> {test.input}
+            </p>
+            <p className="text-sm">
+              <b>Output:</b> {test.output}
+            </p>
           </div>
         ))}
       </div>
@@ -92,7 +96,8 @@ if __name__ == "__main__":
         <div className="h-1/3 p-3 flex-col">
           <button
             className="border-2 px-1 border-[#4e4e4ea4] rounded-lg transition hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] cursor-pointer"
-            onClick={runCode}>
+            onClick={runCode}
+          >
             Run Code
           </button>
           <pre className="mt-2 overflow-auto">{output}</pre>
