@@ -90,8 +90,8 @@ export default function CreateQuestion() {
         title,
         difficulty_votes: 1,
         difficulty_sum: difficultySum,
-        tags: tags,
-        languages: languages,
+        tags,
+        languages,
         display_publicly: true,
       },
       code: {
@@ -341,10 +341,73 @@ export default function CreateQuestion() {
 
         {activeTab === "runtime" && (
           <div className="space-y-6">
-            <div className="p-4 bg-[#333333] rounded">
-              <p className="text-gray-400">
-                Runtime configuration will be available here.
-              </p>
+            <div className="space-y-2">
+              <label className="block text-sm">
+                What Language does this problem use? (you can add additional
+                submission languages after publishing)
+              </label>
+              <select
+                className="w-full bg-[#333333] border-none text-white p-3 rounded"
+                defaultValue="C++"
+              >
+                <option value="C++">C++</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="JavaScript">JavaScript</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm">
+                Write a function that can parse your Test Case sheet
+              </label>
+              <textarea
+                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
+                defaultValue={`std::vector<void*> > parsed;
+void parser() {
+  // parsing
+}`}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm">
+                Write a template function for users to put their solution in
+              </label>
+              <textarea
+                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
+                defaultValue={`void solution() {
+  // code here
+}`}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm">
+                Write a solution to your problem
+              </label>
+              <textarea
+                className="w-full min-h-[180px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
+                defaultValue={`void solution() {
+  // code here
+}`}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm">
+                Finally, write a function that tests the inputs you generated
+                with the user's template function vs your solution. If it passes
+                all test cases, this should only output "all to stdout. If it
+                fails the first test, it should print 1, if it fails the second
+                test, etc.
+              </label>
+              <textarea
+                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
+                defaultValue={`void testing() {
+  // code here
+}`}
+              />
             </div>
           </div>
         )}

@@ -6,7 +6,6 @@ import { useState, useEffect, useRef } from "react";
 import CodeEditor from "@/components/CodeEditor";
 
 export default function Page() {
-
   // When setting up a new editor, pass in a useRef() object to get the editor instance
   // And also pass in a settings object with the language, code, and theme
   const editorRef = useRef(null);
@@ -29,12 +28,12 @@ export default function Page() {
 
   return (
     <>
-    <div className="w-screen min-h-screen bg-[#131313] flex justify-center items-center flex-col">
-      <div className="border border-red-600 w-[50vw] h-[50vh]">
-        <CodeEditor editorRef={editorRef} settings={editorSettings}/>
-        <button onClick={printLines}>Print Lines</button>
+      <div className="w-screen min-h-screen bg-[#131313] flex justify-center items-center flex-col">
+        <div className="border border-red-600 w-[50vw] h-[50vh]">
+          <CodeEditor editorRef={editorRef} settings={editorSettings} />
+          <button onClick={printLines}>Print Lines</button>
+        </div>
       </div>
-    </div>
     </>
   );
 }
