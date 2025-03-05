@@ -43,7 +43,6 @@ export default function CreateQuestion() {
 
   const changeTags = (e) => {
     setTags(e.target.value.split(",").map((tag) => tag.trim()));
-    console.log(tags);
   };
 
   /**
@@ -51,6 +50,11 @@ export default function CreateQuestion() {
    * @type {Array<string>}
    */
   const [languages, setLanguages] = useState([]);
+
+  const changeLanguages = (e) => {
+    setLanguages(e.target.value.split(",").map((language) => language.trim()));
+    console.log(languages);
+  };
 
   /**
    * State for code template.
@@ -83,22 +87,17 @@ export default function CreateQuestion() {
         difficulty_votes: 1,
         difficulty_sum: difficultySum,
         tags: tags,
-        languages: ["string"],
+        languages: languages,
         display_publicly: true,
       },
       code: {
         language: "string",
         inputs: ["string"],
-        template: ["string"],
-        solution: ["string"],
+        template: [codeTemplate],
+        solution: [codeSolution],
         tester: ["string"],
       },
-      test_cases: [
-        {
-          ANSWER: "string",
-          key: "string",
-        },
-      ],
+      test_cases: testCases,
     };
 
     try {
@@ -158,7 +157,7 @@ export default function CreateQuestion() {
             max="10"
             placeholder="Enter difficulty sum"
             onChange={(e) => setDifficultySum(Number(e.target.value))}
-            className="w-full py-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
+            className="w-full py-2 px-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
           />
         </div>
 
@@ -175,9 +174,7 @@ export default function CreateQuestion() {
         <div>
           <Input
             placeholder="Enter programming languages (comma separated)"
-            onChange={(e) =>
-              setLanguages(e.target.value.split(",").map((lang) => lang.trim()))
-            }
+            onChange={changeLanguages}
             className="w-full py-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
           />
         </div>
