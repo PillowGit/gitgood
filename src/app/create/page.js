@@ -41,6 +41,11 @@ export default function CreateQuestion() {
    */
   const [tags, setTags] = useState([]);
 
+  const changeTags = (e) => {
+    setTags(e.target.value.split(",").map((tag) => tag.trim()));
+    console.log(tags);
+  };
+
   /**
    * State for programming languages.
    * @type {Array<string>}
@@ -77,7 +82,7 @@ export default function CreateQuestion() {
         title,
         difficulty_votes: 1,
         difficulty_sum: difficultySum,
-        tags: ["string"],
+        tags: tags,
         languages: ["string"],
         display_publicly: true,
       },
@@ -161,9 +166,7 @@ export default function CreateQuestion() {
         <div>
           <Input
             placeholder="Enter tags (comma separated)"
-            onChange={(e) =>
-              setTags(e.target.value.split(",").map((tag) => tag.trim()))
-            }
+            onChange={changeTags}
             className="w-full py-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
           />
         </div>
