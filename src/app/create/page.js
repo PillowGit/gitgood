@@ -77,18 +77,23 @@ export default function CreateQuestion() {
         title,
         difficulty_votes: 1,
         difficulty_sum: difficultySum,
-        tags,
-        languages,
-        display_publicly: true, // Assuming the question is public by default
+        tags: ["string"],
+        languages: ["string"],
+        display_publicly: true,
       },
       code: {
-        language: languages[0], // Using the first selected language
-        inputs: [], // You can add inputs here
-        template: [codeTemplate],
-        solution: [codeSolution],
-        tester: [], // You can add test cases or testing code here
+        language: "string",
+        inputs: ["string"],
+        template: ["string"],
+        solution: ["string"],
+        tester: ["string"],
       },
-      test_cases: testCases,
+      test_cases: [
+        {
+          ANSWER: "string",
+          key: "string",
+        },
+      ],
     };
 
     try {
@@ -141,12 +146,13 @@ export default function CreateQuestion() {
 
         {/* Difficulty Sum */}
         <div>
+          Difficulty:
           <input
             type="number"
             min="0"
+            max="10"
             placeholder="Enter difficulty sum"
-            value={difficultySum}
-            onChange={(e) => setDifficultySum(e.target.value)}
+            onChange={(e) => setDifficultySum(Number(e.target.value))}
             className="w-full py-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
           />
         </div>
@@ -155,7 +161,6 @@ export default function CreateQuestion() {
         <div>
           <Input
             placeholder="Enter tags (comma separated)"
-            value={tags.join(", ")}
             onChange={(e) =>
               setTags(e.target.value.split(",").map((tag) => tag.trim()))
             }
@@ -167,7 +172,6 @@ export default function CreateQuestion() {
         <div>
           <Input
             placeholder="Enter programming languages (comma separated)"
-            value={languages.join(", ")}
             onChange={(e) =>
               setLanguages(e.target.value.split(",").map((lang) => lang.trim()))
             }
@@ -178,7 +182,7 @@ export default function CreateQuestion() {
         {/* Code Template Input */}
         <div>
           <Input
-            placeholder="Enter code template"
+            placeholder="Enter the problem prompt"
             value={codeTemplate}
             onChange={(e) => setCodeTemplate(e.target.value)}
             className="w-full py-2 text-white bg-[#222222] border border-gray-600 hover:border-gray-400 rounded-lg"
