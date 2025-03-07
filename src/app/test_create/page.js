@@ -33,11 +33,11 @@ export default function CreateQuestion() {
    * @type {number}
    */
   const [difficultySum, setDifficultySum] = useState(5);
-  
+
   /**
-     * State for checking if we are editing the difficulty bar.
-     * @type {bool}
-     */
+   * State for checking if we are editing the difficulty bar.
+   * @type {bool}
+   */
   const [editMode, setEditMode] = useState(false);
 
   /**
@@ -46,7 +46,7 @@ export default function CreateQuestion() {
    */
 
   const [displayPublicly, setDisplayPublicly] = useState(true);
- 
+
   /**
    * State for tags.
    * @type {Array<string>}
@@ -72,11 +72,11 @@ export default function CreateQuestion() {
    * @type {string}
    */
   const [codeTemplate, setCodeTemplate] = useState("");
-  
+
   /**
    * State for code solution.
    * @type {string}
-  */
+   */
   const [codeSolution, setCodeSolution] = useState("");
 
   /**
@@ -84,26 +84,26 @@ export default function CreateQuestion() {
    * @type {Array<{ANSWER: string, key: string}>}
    */
   const [testCases, setTestCases] = useState([{ ANSWER: "", key: "" }]);
-  
+
   /**
    * State for active tab.
    * @type {string}
    */
   const [activeTab, setActiveTab] = useState("basic-info");
-  
+
   /**
    * State for code langauge used.
    * @type {string}
    */
   const [codeLanguage, setCodeLanguage] = useState("C++");
-  
+
   /**
    * Handles form submission.
-  */
- const handleSubmit = async (e) => {
-   e.preventDefault();
+   */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-   const newQuestion = {
+    const newQuestion = {
       description,
       metadata: {
         title,
@@ -111,16 +111,16 @@ export default function CreateQuestion() {
         difficulty_sum: difficultySum,
         tags,
         languages,
-        display_publicly: displayPublicly,
+        display_publicly: displayPublicly
       },
       code: {
         language: codeLanguage,
         inputs: ["string"],
         template: [codeTemplate],
         solution: [codeSolution],
-        tester: ["string"],
+        tester: ["string"]
       },
-      test_cases: testCases,
+      test_cases: testCases
     };
 
     // try {
@@ -142,7 +142,7 @@ export default function CreateQuestion() {
     //   console.error("Error submitting question:", error);
     //   alert("Something went wrong, please try again later.");
     // }
-    console.log(newQuestion)
+    console.log(newQuestion);
   };
 
   return (
@@ -216,45 +216,52 @@ export default function CreateQuestion() {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col items-center">
-              <input
-                type="range"
-                min="0.1"
-                max="10"
-                step="0.1"
-                value={difficultySum}
-                onChange={(e) => setDifficultySum(parseFloat(e.target.value))}
-                className="w-full"
-              />
-              {editMode ? (
+              <div className="flex flex-col items-center">
                 <input
-                  type="number"
-                  step="0.1"
+                  type="range"
                   min="0.1"
                   max="10"
+                  step="0.1"
                   value={difficultySum}
-                  onChange={(e) => {
-                    const val = parseFloat(e.target.value);
-                    setDifficultySum(isNaN(val) ? difficultySum : Math.min(10, Math.max(0.1, val)));
-                  }}
-                  onBlur={(e) => {
-                    const val = parseFloat(e.target.value);
-                    setDifficultySum(isNaN(val) ? difficultySum : Math.min(10, Math.max(0.1, val)));
-                    setEditMode(false);
-                  }}
-                  autoFocus
-                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center"
+                  onChange={(e) => setDifficultySum(parseFloat(e.target.value))}
+                  className="w-full"
                 />
-              ) : (
-                <div
-                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center cursor-pointer"
-                  onClick={() => setEditMode(true)}
-                >
-                  {difficultySum.toFixed(1)}
-                </div>
-              )}
-            </div>
-
+                {editMode ? (
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    max="10"
+                    value={difficultySum}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value);
+                      setDifficultySum(
+                        isNaN(val)
+                          ? difficultySum
+                          : Math.min(10, Math.max(0.1, val))
+                      );
+                    }}
+                    onBlur={(e) => {
+                      const val = parseFloat(e.target.value);
+                      setDifficultySum(
+                        isNaN(val)
+                          ? difficultySum
+                          : Math.min(10, Math.max(0.1, val))
+                      );
+                      setEditMode(false);
+                    }}
+                    autoFocus
+                    className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center"
+                  />
+                ) : (
+                  <div
+                    className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center cursor-pointer"
+                    onClick={() => setEditMode(true)}
+                  >
+                    {difficultySum.toFixed(1)}
+                  </div>
+                )}
+              </div>
 
               <div className="space-y-2">
                 <label className="block text-xs text-center">
@@ -264,12 +271,12 @@ export default function CreateQuestion() {
                 </label>
                 <div className="flex justify-center items-center h-12">
                   <div className="h-6 w-6 rounded bg-[#333333] flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    checked={displayPublicly}
-                    onChange={(e) => setDisplayPublicly(e.target.checked)}
-                    className="h-6 w-6 rounded bg-[#333333] accent-blue-500"
-                  />
+                    <input
+                      type="checkbox"
+                      checked={displayPublicly}
+                      onChange={(e) => setDisplayPublicly(e.target.checked)}
+                      className="h-6 w-6 rounded bg-[#333333] accent-blue-500"
+                    />
                   </div>
                 </div>
               </div>
