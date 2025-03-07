@@ -33,7 +33,20 @@ export default function CreateQuestion() {
    * @type {number}
    */
   const [difficultySum, setDifficultySum] = useState(5);
+  
+  /**
+     * State for checking if we are editing the difficulty bar.
+     * @type {bool}
+     */
+  const [editMode, setEditMode] = useState(false);
 
+  /**
+   * State for public display setting.
+   * @type {Array<bool>}
+   */
+
+  const [displayPublicly, setDisplayPublicly] = useState(true);
+ 
   /**
    * State for tags.
    * @type {Array<string>}
@@ -59,11 +72,11 @@ export default function CreateQuestion() {
    * @type {string}
    */
   const [codeTemplate, setCodeTemplate] = useState("");
-
+  
   /**
    * State for code solution.
    * @type {string}
-   */
+  */
   const [codeSolution, setCodeSolution] = useState("");
 
   /**
@@ -71,20 +84,26 @@ export default function CreateQuestion() {
    * @type {Array<{ANSWER: string, key: string}>}
    */
   const [testCases, setTestCases] = useState([{ ANSWER: "", key: "" }]);
-
+  
   /**
    * State for active tab.
    * @type {string}
    */
   const [activeTab, setActiveTab] = useState("basic-info");
-
+  
+  /**
+   * State for code langauge used.
+   * @type {string}
+   */
+  const [codeLanguage, setCodeLanguage] = useState("C++");
+  
   /**
    * Handles form submission.
-   */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  */
+ const handleSubmit = async (e) => {
+   e.preventDefault();
 
-    const newQuestion = {
+   const newQuestion = {
       description,
       metadata: {
         title,
@@ -92,10 +111,10 @@ export default function CreateQuestion() {
         difficulty_sum: difficultySum,
         tags,
         languages,
-        display_publicly: true,
+        display_publicly: displayPublicly,
       },
       code: {
-        language: "string",
+        language: codeLanguage,
         inputs: ["string"],
         template: [codeTemplate],
         solution: [codeSolution],
@@ -104,25 +123,26 @@ export default function CreateQuestion() {
       test_cases: testCases,
     };
 
-    try {
-      const response = await fetch("/api/questions/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newQuestion),
-      });
+    // try {
+    //   const response = await fetch("/api/questions/create", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(newQuestion),
+    //   });
 
-      if (response.ok) {
-        alert("Question created successfully!");
-      } else {
-        const data = await response.json();
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Error submitting question:", error);
-      alert("Something went wrong, please try again later.");
-    }
+    //   if (response.ok) {
+    //     alert("Question created successfully!");
+    //   } else {
+    //     const data = await response.json();
+    //     alert(`Error: ${data.error}`);
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting question:", error);
+    //   alert("Something went wrong, please try again later.");
+    // }
+    console.log(newQuestion)
   };
 
   return (
@@ -196,29 +216,45 @@ export default function CreateQuestion() {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <label className="block text-xs text-center">
-                  Projected Difficulty
-                  <br />
-                  (0.1-10.0)
-                </label>
-                <div className="flex flex-col items-center">
-                  <input
-                    type="range"
-                    min="0.1"
-                    max="10"
-                    step="0.1"
-                    value={difficultySum}
-                    onChange={(e) =>
-                      setDifficultySum(Number.parseFloat(e.target.value))
-                    }
-                    className="w-full"
-                  />
-                  <div className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center">
-                    {difficultySum.toFixed(1)}
-                  </div>
+            <div className="flex flex-col items-center">
+              <input
+                type="range"
+                min="0.1"
+                max="10"
+                step="0.1"
+                value={difficultySum}
+                onChange={(e) => setDifficultySum(parseFloat(e.target.value))}
+                className="w-full"
+              />
+              {editMode ? (
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="10"
+                  value={difficultySum}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setDifficultySum(isNaN(val) ? difficultySum : Math.min(10, Math.max(0.1, val)));
+                  }}
+                  onBlur={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setDifficultySum(isNaN(val) ? difficultySum : Math.min(10, Math.max(0.1, val)));
+                    setEditMode(false);
+                  }}
+                  autoFocus
+                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center"
+                />
+              ) : (
+                <div
+                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center cursor-pointer"
+                  onClick={() => setEditMode(true)}
+                >
+                  {difficultySum.toFixed(1)}
                 </div>
-              </div>
+              )}
+            </div>
+
 
               <div className="space-y-2">
                 <label className="block text-xs text-center">
@@ -228,19 +264,12 @@ export default function CreateQuestion() {
                 </label>
                 <div className="flex justify-center items-center h-12">
                   <div className="h-6 w-6 rounded bg-[#333333] flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                  <input
+                    type="checkbox"
+                    checked={displayPublicly}
+                    onChange={(e) => setDisplayPublicly(e.target.checked)}
+                    className="h-6 w-6 rounded bg-[#333333] accent-blue-500"
+                  />
                   </div>
                 </div>
               </div>
@@ -293,32 +322,6 @@ export default function CreateQuestion() {
         {activeTab === "test-cases" && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="codeTemplate" className="block text-sm">
-                Code Template
-              </label>
-              <textarea
-                id="codeTemplate"
-                value={codeTemplate}
-                onChange={(e) => setCodeTemplate(e.target.value)}
-                placeholder="Enter the problem prompt"
-                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="codeSolution" className="block text-sm">
-                Code Solution
-              </label>
-              <textarea
-                id="codeSolution"
-                value={codeSolution}
-                onChange={(e) => setCodeSolution(e.target.value)}
-                placeholder="Enter code solution"
-                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y"
-              />
-            </div>
-
-            <div className="space-y-2">
               <label htmlFor="testCases" className="block text-sm">
                 Test Cases (JSON format)
               </label>
@@ -349,21 +352,25 @@ export default function CreateQuestion() {
               <select
                 className="w-full bg-[#333333] border-none text-white p-3 rounded"
                 defaultValue="C++"
+                value={codeLanguage}
+                onChange={(e) => setCodeLanguage(e.target.value)}
               >
                 <option value="C++">C++</option>
-                <option value="Python">Python</option>
                 <option value="Java">Java</option>
+                <option value="Python">Python</option>
+                <option value="Python3">Python3</option>
+                <option value="C">C</option>
                 <option value="JavaScript">JavaScript</option>
               </select>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm">
-                Write a function that can parse your Test Case sheet
+                Write a function that can parse your Test Cases
               </label>
               <textarea
                 className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                defaultValue={`std::vector<void*> > parsed;
+                defaultValue={`std::vector<void*> parsed;
 void parser() {
   // parsing
 }`}
@@ -375,8 +382,11 @@ void parser() {
                 Write a template function for users to put their solution in
               </label>
               <textarea
+                value={codeTemplate}
+                id="codeTemplate"
+                onChange={(e) => setCodeTemplate(e.target.value)}
                 className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                defaultValue={`void solution() {
+                placeholder={`void solution() {
   // code here
 }`}
               />
@@ -387,8 +397,11 @@ void parser() {
                 Write a solution to your problem
               </label>
               <textarea
+                id="codeSolution"
+                value={codeSolution}
+                onChange={(e) => setCodeSolution(e.target.value)}
                 className="w-full min-h-[180px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                defaultValue={`void solution() {
+                placeholder={`void solution() {
   // code here
 }`}
               />
@@ -404,7 +417,7 @@ void parser() {
               </label>
               <textarea
                 className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                defaultValue={`void testing() {
+                placeholder={`void testing() {
   // code here
 }`}
               />
