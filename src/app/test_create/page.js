@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
+import Editor from "@monaco-editor/react";
 
 /**
  * CreateQuestion component for adding a new coding question.
@@ -49,9 +50,36 @@ export default function CreateQuestion() {
 
   /**
    * State for tags.
-   * @type {Array<string>}
+   * @type {Object}
    */
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState({
+    array: false,
+    string: false,
+    hash_table: false,
+    dp: false,
+    math: false,
+    sorting: false,
+    greedy: false,
+    dfs: false,
+    bfs: false,
+    binary_search: false,
+    matrix: false,
+    tree: false,
+    bit_manipulation: false,
+    two_pointer: false,
+    heap: false,
+    stack: false,
+    graph: false,
+    sliding_window: false,
+    back_tracking: false,
+    linked_list: false,
+    set: false,
+    queue: false,
+    memo: false,
+    recursion: false,
+    hashing: false,
+    bit_mask: false
+  });
 
   const changeTags = (e) => {
     setTags(e.target.value.split(",").map((tag) => tag.trim()));
@@ -63,9 +91,12 @@ export default function CreateQuestion() {
    */
   const [languages, setLanguages] = useState([]);
 
-  const changeLanguages = (e) => {
-    setLanguages(e.target.value.split(",").map((language) => language.trim()));
-  };
+  /**
+   * State for curernt programming language.
+   * @type {string}
+   */
+
+  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   /**
    * State for code template.
@@ -97,6 +128,24 @@ export default function CreateQuestion() {
    */
   const [codeLanguage, setCodeLanguage] = useState("C++");
 
+  function mapLanguage(lang) {
+    const normalized = lang.trim().toLowerCase();
+    if (normalized === "c++" || normalized === "c") {
+      return "cpp";
+    }
+    if (normalized === "javascript") {
+      return "javascript";
+    }
+    if (normalized === "java") {
+      return "java";
+    }
+    if (normalized === "python" || normalized === "python3") {
+      return "python";
+    }
+    // Return the normalized language if no mapping is needed
+    return normalized;
+  }
+
   /**
    * Handles form submission.
    */
@@ -109,7 +158,7 @@ export default function CreateQuestion() {
         title,
         difficulty_votes: 1,
         difficulty_sum: difficultySum,
-        tags,
+        tags: Object.keys(tags).filter((tag) => tags[tag]),
         languages,
         display_publicly: displayPublicly
       },
@@ -299,29 +348,85 @@ export default function CreateQuestion() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="tags" className="block text-sm">
-                Question Tags (comma separated)
+              <label htmlFor="languages" className="block text-sm">
+                Programming Languages
               </label>
-              <input
-                id="tags"
-                type="text"
-                onChange={changeTags}
-                placeholder="DP, Array, Stack, Queue, DFS"
-                className="w-full bg-[#333333] border-none text-white p-3 rounded"
-              />
+              <div className="flex items-center space-x-2">
+                <select
+                  id="languages"
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="bg-[#333333] border-none text-white p-3 rounded"
+                >
+                  <option value="">Select a Language</option>
+                  <option value="C++">C++</option>
+                  <option value="Java">Java</option>
+                  <option value="Python">Python</option>
+                  <option value="Python3">Python3</option>
+                  <option value="C">C</option>
+                  <option value="JavaScript">JavaScript</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (
+                      selectedLanguage &&
+                      !languages.includes(selectedLanguage)
+                    ) {
+                      setLanguages([...languages, selectedLanguage]);
+                      setSelectedLanguage("");
+                    }
+                  }}
+                  className="bg-[#4a4a4a] hover:bg-[#5a5a5a] text-white py-2 px-4 rounded"
+                >
+                  Add
+                </button>
+              </div>
+              {languages.length > 0 && (
+                <ul className="mt-2">
+                  {languages.map((lang, idx) => (
+                    <li key={idx} className="flex items-center space-x-2">
+                      <span>{lang}</span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLanguages(languages.filter((l) => l !== lang))
+                        }
+                        className="text-red-500"
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="languages" className="block text-sm">
-                Programming Languages (comma separated)
+              <label htmlFor="tags" className="block text-sm">
+                Question Tags
               </label>
-              <input
-                id="languages"
-                type="text"
-                onChange={changeLanguages}
-                placeholder="JavaScript, Python, Java, C++"
-                className="w-full bg-[#333333] border-none text-white p-3 rounded"
-              />
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(tags).map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() =>
+                      setTags({
+                        ...tags,
+                        [tag]: !tags[tag]
+                      })
+                    }
+                    className={`px-3 py-1 rounded ${
+                      tags[tag]
+                        ? "bg-blue-500 text-white"
+                        : "bg-[#333333] text-white"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -375,43 +480,69 @@ export default function CreateQuestion() {
               <label className="block text-sm">
                 Write a function that can parse your Test Cases
               </label>
-              <textarea
-                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                defaultValue={`std::vector<void*> parsed;
+              <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
+                <Editor
+                  id="parseCode"
+                  language={mapLanguage(codeLanguage) || "javascript"}
+                  theme="vs-dark"
+                  defaultValue={`std::vector<void*> parsed;
 void parser() {
-  // parsing
+// parsing
 }`}
-              />
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    automaticLayout: true
+                  }}
+                  className="w-full h-64" // fixed height for better consistency
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm">
                 Write a template function for users to put their solution in
               </label>
-              <textarea
-                value={codeTemplate}
-                id="codeTemplate"
-                onChange={(e) => setCodeTemplate(e.target.value)}
-                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                placeholder={`void solution() {
+              <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
+                <Editor
+                  id="codeTemplate"
+                  language={mapLanguage(codeLanguage) || "javascript"}
+                  onChange={(value, event) => setCodeTemplate(value)}
+                  theme="vs-dark"
+                  defaultValue={`void solution() {
   // code here
 }`}
-              />
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    automaticLayout: true
+                  }}
+                  className="w-full h-64" // fixed height for better consistency
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <label className="block text-sm">
                 Write a solution to your problem
               </label>
-              <textarea
-                id="codeSolution"
-                value={codeSolution}
-                onChange={(e) => setCodeSolution(e.target.value)}
-                className="w-full min-h-[180px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                placeholder={`void solution() {
+              <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
+                <Editor
+                  id="codeSolution"
+                  language={mapLanguage(codeLanguage) || "javascript"}
+                  onChange={(value, event) => setCodeSolution(value)}
+                  theme="vs-dark"
+                  defaultValue={`void solution() {
   // code here
 }`}
-              />
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    automaticLayout: true
+                  }}
+                  className="w-full h-64" // fixed height for better consistency
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -422,12 +553,23 @@ void parser() {
                 fails the first test, it should print 1, if it fails the second
                 test, etc.
               </label>
-              <textarea
-                className="w-full min-h-[120px] bg-[#333333] border-none text-white p-3 rounded resize-y font-mono text-sm"
-                placeholder={`void testing() {
+
+              <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
+                <Editor
+                  id="parseCode"
+                  language={mapLanguage(codeLanguage) || "javascript"}
+                  theme="vs-dark"
+                  defaultValue={`void testing() {
   // code here
 }`}
-              />
+                  options={{
+                    fontSize: 14,
+                    minimap: { enabled: false },
+                    automaticLayout: true
+                  }}
+                  className="w-full h-64" // fixed height for better consistency
+                />
+              </div>
             </div>
           </div>
         )}
