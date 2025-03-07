@@ -172,25 +172,26 @@ export default function CreateQuestion() {
       test_cases: testCases
     };
 
-    try {
-      const response = await fetch("/api/questions/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newQuestion)
-      });
+    // try {
+    //   const response = await fetch("/api/questions/create", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(newQuestion)
+    //   });
 
-      if (response.ok) {
-        alert("Question created successfully!");
-      } else {
-        const data = await response.json();
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Error submitting question:", error);
-      alert("Something went wrong, please try again later.");
-    }
+    //   if (response.ok) {
+    //     alert("Question created successfully!");
+    //   } else {
+    //     const data = await response.json();
+    //     alert(`Error: ${data.error}`);
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting question:", error);
+    //   alert("Something went wrong, please try again later.");
+    // }
+    console.log(newQuestion);
   };
 
   return (
