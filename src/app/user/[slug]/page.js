@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import { getDefaultQuery, makeQuery } from "@/lib/proxies/queries";
+import { proxyGetLeaderboard } from "@/lib/proxies/leaderboard";
 
 export default function ClientComponent() {
   // Auth session
@@ -31,6 +32,10 @@ export default function ClientComponent() {
       }
       alert(str);
     }
+  }
+
+  async function testLeaderboard() {
+    alert(JSON.stringify(await proxyGetLeaderboard()));
   }
 
   async function testQuestion() {
@@ -65,6 +70,12 @@ export default function ClientComponent() {
           onClick={testQuestion}
         >
           <div className="my-2 mx-4">Test Question Fetch</div>
+        </button>
+        <button
+          className="h-12 m-4 text-lg border-2 border-[#4e4e4ea4] rounded-lg transition hover:scale-110 hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] hover:text-[#F7F7F2] cursor-pointer"
+          onClick={testLeaderboard}
+        >
+          <div className="my-2 mx-4">Test Leaderboard Fetch</div>
         </button>
         <div>{userdata}</div>
       </div>
