@@ -2,6 +2,8 @@ import { db } from "@/lib/database/firebase";
 import { deepCopy } from "@/lib/utilities";
 import { getUser } from "@/lib/database/users";
 import {
+  startAfter,
+  startAt,
   collection,
   doc,
   getDoc,
