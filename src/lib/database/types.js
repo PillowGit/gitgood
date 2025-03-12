@@ -122,6 +122,15 @@
  * @property {boolean} ownership_is_public - Whether the user's name appears on challenges they create
  */
 
+/**
+ * The user data passed for the leaderboard
+ * @typedef {Object} LeaderboardUserData
+ * @property {string} github_id - The user's github id
+ * @property {string} display_name - The user's display name
+ * @property {string} avatar - The user's avatar URL (github url)
+ * @property {number} points_accumulated - The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
+ */
+
 //
 // Data Query Types
 //
