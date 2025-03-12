@@ -1,4 +1,15 @@
-import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
 
 import /** @type {DatabaseError}, @type {UserData} */ "@/lib/database/types";
@@ -98,4 +109,23 @@ async function deleteUser(userId) {
   }
 }
 
-export { getUser, addUser, updateUser, deleteUser };
+/**
+ * Gets the top 10 users from the database ordered by points_accumulated
+ * @returns {UserData[] | DatabaseError}
+ */
+async function topTenUsers() {
+  const query_params = [];
+  query_params.push(collection(db, "users"));
+  query_params.push(where("points_are_public", "==", true));
+  query_params.push(orderBy("points_accumulated", "desc"));
+  query_params.push(limit(10));
+  const q = query(...query_params);
+  const querySnapshot = await getDocs(q);
+  const users = [];
+  querySnapshot.forEach((doc) => {
+    users.push(doc.data());
+  });
+  return users;
+}
+
+export { getUser, addUser, updateUser, deleteUser, topTenUsers };
