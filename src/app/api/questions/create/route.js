@@ -222,6 +222,8 @@ export async function POST(req) {
         tags: baseQuestionData.metadata.tags,
         author_id: github_id,
         author_name: githubUser.login,
+        difficulty:
+          data.metadata.difficulty_sum / data.metadata.difficulty_votes,
       },
       code: [data.code], // Only one code object initially
       test_cases: data.test_cases,
