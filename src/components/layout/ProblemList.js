@@ -4,6 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search } from "lucide-react"; // Added Search icon
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import Link from "next/link";
+
+import { getDefaultQuery, makeQuery } from "@/lib/proxies/queries";
+import { timestampToDate } from "@/lib/utilities";
 
 /**
  * ProblemList component for displaying a list of coding problems with search and filter functionality.
@@ -46,40 +50,21 @@ export default function ProblemList() {
   /**
    * Array containing problem data for display.
    * Each problem includes title, author, date, and difficulty.
-   * @type {Array<{title: string, author: string, date: string, difficulty: number}>}
+   * @type {Metadata[]}
    */
-  const problems = [
-    {
-      title: "Smallest Path Between Nodes",
-      author: "David Solano",
-      date: "Sept 25, 2025",
-      difficulty: 4.0,
-    },
-    {
-      title: "Create a Web Socket",
-      author: "Yves Velasquez",
-      date: "July 13, 2025",
-      difficulty: 7.5,
-    },
-    {
-      title: "Database SQL Training",
-      author: "Esteban Escartin",
-      date: "July 10, 2025",
-      difficulty: 3.2,
-    },
-    {
-      title: "HTML Basics",
-      author: "Kyle Ho",
-      date: "April 12, 2025",
-      difficulty: 1.5,
-    },
-    {
-      title: "Traveling Salesman",
-      author: "Bruce Mckenzie",
-      date: "Feb 09, 2025",
-      difficulty: 8.0,
-    },
-  ];
+  const [problems, setProblems] = useState([]);
+
+  /**
+   * Array containing all pages
+   * @type {Metadata[][]}
+   */
+  const [pages, setPages] = useState([]);
+
+  /**
+   * Current page number
+   * @type {number}
+   */
+  const [currentPage, setCurrentPage] = useState(0);
 
   /**
    * Array of difficulty levels available for filtering problems.
@@ -92,6 +77,32 @@ export default function ProblemList() {
     "Hard (7-10)",
   ];
 
+  function backPage() {
+    if (currentPage == 0) return;
+    setProblems(pages[currentPage - 1]);
+    setCurrentPage(currentPage - 1);
+  }
+  function nextPage() {
+    if (currentPage + 1 < pages.length) {
+      setProblems(pages[currentPage + 1]);
+      setCurrentPage(currentPage + 1);
+    } else if (
+      currentPage + 1 === pages.length &&
+      pages[pages.length - 1].length < 5
+    ) {
+      return;
+    } else {
+      const query = getDefaultQuery();
+      query.limit = 5;
+      query.start_after = pages[pages.length - 1][4].questionid;
+      makeQuery(query).then((response) => {
+        setPages([...pages, response]);
+        setProblems(response);
+        setCurrentPage(currentPage + 1);
+      });
+    }
+  }
+
   /**
    * Effect hook that closes the difficulty dropdown if a click occurs outside of it.
    * This effect listens for `mousedown` events on the document.
@@ -103,30 +114,17 @@ export default function ProblemList() {
       }
     };
 
+    // Fetch data
+    const query = getDefaultQuery();
+    query.limit = 5;
+    makeQuery(query).then((response) => {
+      setPages([response]);
+      setProblems(response);
+    });
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  /**
-   * Filters the problems based on the current search query and selected difficulty level.
-   *
-   * @returns {Array<{title: string, author: string, date: string, difficulty: number}>} The filtered problems.
-   */
-  const filteredProblems = problems.filter((problem) => {
-    const matchesSearch = problem.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesDifficulty =
-      selectedDifficulty === "Filters" ||
-      (selectedDifficulty === "Easy (1-3)" && problem.difficulty < 4) ||
-      (selectedDifficulty === "Medium (4-6)" &&
-        problem.difficulty >= 4 &&
-        problem.difficulty <= 7) ||
-      (selectedDifficulty === "Hard (7-10)" && problem.difficulty > 7);
-
-    return matchesSearch && matchesDifficulty;
-  });
 
   return (
     <div className="sm:w-full md:w-2/3 lg:w-5/6 pr-6 space-y-6 mx-auto bg-[#1a1a1a] rounded-lg p-3">
@@ -176,9 +174,10 @@ export default function ProblemList() {
 
       {/* Problem List Display */}
       <div className="h-[600px] space-y-4 overflow-auto">
-        {filteredProblems.length > 0 ? (
-          filteredProblems.map((problem, i) => (
-            <div
+        {problems.length > 0 ? (
+          problems.map((problem, i) => (
+            <Link
+              href={`/challenge/${problem.questionid}`}
               key={i}
               className="flex flex-col sm:flex-row items-start space-x-0 sm:space-x-4 p-4 bg-[#1a1a1a] rounded-lg hover:bg-[#282828] transition shadow-md"
             >
@@ -191,10 +190,14 @@ export default function ProblemList() {
                     Difficulty: {problem.difficulty}
                   </span>
                 </div>
-                <p className="text-sm text-gray-400">By: {problem.author}</p>
-                <p className="text-sm text-gray-500">{problem.date}</p>
+                <p className="text-sm text-gray-400">
+                  By: {problem.author_name}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {timestampToDate(problem.date_updated).toDateString()}
+                </p>
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <p className="text-center text-gray-400">No problems found.</p>
@@ -205,14 +208,16 @@ export default function ProblemList() {
       <div className="flex items-center justify-center pt-4 border-t border-gray-700">
         <Button
           variant="outline"
-          className="px-4 py-2 rounded-lg border-gray-600 text-gray-400"
+          className="px-4 py-2 rounded-lg border-gray-600 transition hover:scale-110 hover:underline focus:scale-110 focus:underline"
+          onClick={backPage}
         >
           &lt; Prev
         </Button>
-        <span className="text-sm text-gray-400">Page [1] of 120</span>
+        <span className="text-sm text-gray-400">Page {currentPage + 1}</span>
         <Button
           variant="outline"
-          className="px-4 py-2 rounded-lg border-gray-600 hover:border-gray-400 transition"
+          className="px-4 py-2 rounded-lg border-gray-600 transition hover:scale-110 hover:underline focus:scale-110 focus:underline"
+          onClick={nextPage}
         >
           Next &gt;
         </Button>
