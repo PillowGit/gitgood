@@ -24,6 +24,9 @@ export default function Navbar() {
    * @property {boolean} authenticated - Boolean flag indicating if the user is logged in.
    */
   const { data: session } = useSession();
+  const github_id = session
+    ? session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1]
+    : null;
 
   /**
    * State for controlling the visibility of the mobile menu.
@@ -36,26 +39,61 @@ export default function Navbar() {
       {/* Logo and navigation links */}
       <div className="flex items-center pt-1 space-x-6">
         <Link href="/">
-          <img src="/icon.svg" alt="GitGood Logo" className="w-7 h-7" />
+          <img
+            src="/icon.svg"
+            alt="GitGood Logo"
+            className="w-7 h-7 transition hover:scale-110 focus:scale-110"
+          />
         </Link>
         <div className="hidden md:flex space-x-6">
           {/* Links visible on larger screens */}
-          <Link href="/problems">Problems</Link>
-          <Link href="/my-set">My Set</Link>
-          <Link href="/create">Create</Link>
+          <Link
+            href="/problems"
+            className="transition hover:scale-110 focus:scale-110"
+          >
+            Problems
+          </Link>
+          <Link
+            href="/my-set"
+            className="transition hover:scale-110 focus:scale-110"
+          >
+            My Set
+          </Link>
+          <Link
+            href="/create"
+            className="transition hover:scale-110 focus:scale-110"
+          >
+            Create
+          </Link>
         </div>
       </div>
 
       {/* Authentication button for larger screens */}
       <div className="pt-1 hidden md:block">
         {!session ? (
-          <button onClick={() => signIn("github")} className="underline">
+          <button
+            onClick={() => signIn("github")}
+            className="underline transition hover:scale-110 focus:scale-110"
+          >
             Sign in with GitHub
           </button>
         ) : (
-          <button onClick={() => signOut()} className="underline">
-            Sign Out ({session.user.name})
-          </button>
+          <div className="flex items-center space-x-2">
+            <p>Welcome back, {session.user.name}!</p>
+            <Link href={`/user/${github_id}`}>
+              <img
+                src={session.user.image}
+                alt="User Profile Image"
+                className="w-8 h-8 rounded-full border transition hover:scale-110 focus:scale-110"
+              />
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className="underline transition hover:scale-110 focus:scale-110"
+            >
+              Sign Out
+            </button>
+          </div>
         )}
       </div>
 
@@ -102,9 +140,17 @@ export default function Navbar() {
               Sign in with GitHub
             </button>
           ) : (
-            <button onClick={() => signOut()} className="underline text-white">
-              Sign Out ({session.user.name})
-            </button>
+            <>
+              <Link href={`/user/${github_id}`} className="text-white">
+                Me
+              </Link>
+              <button
+                onClick={() => signOut()}
+                className="underline text-white"
+              >
+                Sign Out ({session.user.name})
+              </button>
+            </>
           )}
         </div>
       )}
