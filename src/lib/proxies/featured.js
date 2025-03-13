@@ -9,7 +9,7 @@ async function getFeaturedQuestions() {
 
   const questions = [
     await getQuestion("XmLJ0J"),
-    await getQuestion("PNPs9N"),
+    await getQuestion("Y2E9Ar"),
     await getQuestion("8gqfA-"),
   ];
 
