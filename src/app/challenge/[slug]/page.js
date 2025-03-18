@@ -57,9 +57,11 @@ export default function Page() {
         const result = await response.json();
 
         setOutput(
-          result.compile?.stderr
-            ? `Compilation Error:\n${result.compile.stderr}`
-            : result.run.output || "No output"
+          result.message
+            ? `Execution Error: ${result.message}`
+            : result.compile?.stderr
+              ? `Compilation Error:\n${result.compile.stderr}`
+              : result.run.output || "No output"
         );
       } catch (error) {
         setOutput(`Error: ${error.message}`);
