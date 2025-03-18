@@ -11,33 +11,36 @@ export default function Page() {
   const { data: session } = useSession();
 
   const editorRef = useRef(null);
-  const editorSettings = {
+  const [editorSettings, setEditorSettings] = useState({
     language: "python",
-    code: `class Solution:
-    def twoSum(self, nums: list[int], target: int) -> list[int]:
-      # Add code here
-
-if __name__ == "__main__":
-  nums = [2, 7, 11, 15]
-  target = 9
-  expected = [0, 1]
-  solution = Solution()
-  result = solution.twoSum(nums, target)
-  if result != expected: print("Incorrect!")
-  else: print("Correct!")
-  print(f"Result: {result}")
-  print(f"Expected: {expected}")`,
+    code: `# Loading code...`,
     theme: "vs-dark",
-  };
+  });
 
   const [output, setOutput] = useState("");
+  const [question, setQuestion] = useState({
+    metadata: { title: "Loading..." },
+    description: "Loading question details...",
+    test_cases: [],
+    code: []
+  });
 
-  const [question_data, setQuestionData] = useState("Loading...");
+  const [loading, setLoading] = useState(true);
 
   const params = useParams();
   const slug = params.slug;
 
+  const displayTests = question.test_cases.map((test, idx) => {
+    const inputs = test.key ? Object.entries(test.key).map(([key, value]) => `${key}: ${value}`).join(", ") : "No inputs.";
+
+    return {
+      input: inputs,
+      output: test.ANSWER
+    };
+  });
+
   async function runCode() {
+    // Runs code from editor
     if (editorRef.current) {
       const code = editorRef.current.getValue();
       setOutput(`Running...\n`);
@@ -69,23 +72,37 @@ if __name__ == "__main__":
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          setQuestionData("idk bro there was an error or something");
+          setQuestion(`Error loading question: ${data.error}`);
         } else {
-          setQuestionData(JSON.stringify(data, null, 2));
+          setQuestion(data);
+
+          if (data.code && data.code.length > 0) {
+            const codeObj = data.code[0];
+            setEditorSettings({
+              language: codeObj.language,
+              code: codeObj.template ? codeObj.template.join('\n') : "// No template provided",
+            });
+          }
+
+          setLoading(false);
         }
+      })
+      .catch(error => {
+        setOutput(`Error fetching question: ${error.message}`);
+        setLoading(false);
       });
-  }, []);
+  }, [slug]);
 
   return (
     <div className="flex h-screen">
       {/* Left Panel: Challenge */}
-      <div className="w-1/3 p-5 border-r">
-        <h1 className="text-xl font-bold ">{challenge.title}</h1>
-        <p className="mt-2">{challenge.description}</p>
+      <div className="w-1/3 p-5 border-r overflow-auto">
+        <h1 className="text-xl font-bold ">{question.metadata.title}</h1>
+        <p className="mt-2">{question.description}</p>
         <h2 className="mt-4 text-lg font-bold">Examples:</h2>
 
-        {challenge.tests.map((test, idx) => (
-          <div key={idx} className="mt-2">
+        {displayTests.map((test, idx) => (
+          <div key={idx} className="mt-2 p-3 bg-[#222] rounded">
             <p className="font-semibold">Example {idx + 1}: </p>
             <p className="text-sm">
               <b>Input:</b> {test.input}
@@ -109,6 +126,7 @@ if __name__ == "__main__":
           <button
             className="border-2 px-1 border-[#4e4e4ea4] rounded-lg transition hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] cursor-pointer"
             onClick={runCode}
+            disabled={loading}
           >
             Run Code
           </button>
