@@ -1,10 +1,15 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
+import { getQuestion } from "@/lib/database/questions";
 import CodeEditor from "@/components/CodeEditor";
 
 export default function Page() {
+  const { data: session } = useSession();
+
   const editorRef = useRef(null);
   const editorSettings = {
     language: "python",
@@ -27,14 +32,10 @@ if __name__ == "__main__":
 
   const [output, setOutput] = useState("");
 
-  const challenge = {
-    title: "Two Sum",
-    description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    tests: [
-      { input: "nums = [2, 7, 11, 15], target = 9", output: "[0, 1]" },
-      { input: "nums = [2, 7, 11, 15], target = 9", output: "[0, 1]" }
-    ]
-  };
+  const [question_data, setQuestionData] = useState("Loading...");
+
+  const params = useParams();
+  const slug = params.slug;
 
   async function runCode() {
     if (editorRef.current) {
@@ -45,9 +46,9 @@ if __name__ == "__main__":
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-              code,
-              language: editorSettings.language
-            }),
+            code,
+            language: editorSettings.language,
+          }),
         });
 
         const result = await response.json();
@@ -63,9 +64,20 @@ if __name__ == "__main__":
     }
   }
 
+  useEffect(() => {
+    fetch(`/api/questions/${slug}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setQuestionData("idk bro there was an error or something");
+        } else {
+          setQuestionData(JSON.stringify(data, null, 2));
+        }
+      });
+  }, []);
+
   return (
     <div className="flex h-screen">
-
       {/* Left Panel: Challenge */}
       <div className="w-1/3 p-5 border-r">
         <h1 className="text-xl font-bold ">{challenge.title}</h1>
@@ -75,8 +87,12 @@ if __name__ == "__main__":
         {challenge.tests.map((test, idx) => (
           <div key={idx} className="mt-2">
             <p className="font-semibold">Example {idx + 1}: </p>
-            <p className="text-sm"><b>Input:</b> {test.input}</p>
-            <p className="text-sm"><b>Output:</b> {test.output}</p>
+            <p className="text-sm">
+              <b>Input:</b> {test.input}
+            </p>
+            <p className="text-sm">
+              <b>Output:</b> {test.output}
+            </p>
           </div>
         ))}
       </div>
@@ -92,12 +108,20 @@ if __name__ == "__main__":
         <div className="h-1/3 p-3 flex-col">
           <button
             className="border-2 px-1 border-[#4e4e4ea4] rounded-lg transition hover:bg-[#4e4e4ea4] hover:border-[#4e4e4ea4] cursor-pointer"
-            onClick={runCode}>
+            onClick={runCode}
+          >
             Run Code
           </button>
           <pre className="mt-2 overflow-auto">{output}</pre>
         </div>
       </div>
     </div>
+    // export default function ClientComponent() {
+    //   return (
+    //     <>
+    //       <div className="min-h-screen bg-[#222222] text-white p-8 px-14">
+    //         <div>{question_data}</div>
+    //       </div>
+    //     </>
   );
 }

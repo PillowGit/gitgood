@@ -4,7 +4,7 @@
 
 /**
  * Error message object
- * @typedef {Object} Error
+ * @typedef {Object} DatabaseError
  * @property {string} error - The error message
  */
 
@@ -41,14 +41,47 @@
  */
 
 /**
+ * The available tags for a question
+ * @typedef {Object} Tags
+ * @property {boolean} array - The array tag
+ * @property {boolean} string - The string tag
+ * @property {boolean} hash_table - The hash_table tag
+ * @property {boolean} dp - The dp tag
+ * @property {boolean} math - The math tag
+ * @property {boolean} sorting - The sorting tag
+ * @property {boolean} greedy - The greedy tag
+ * @property {boolean} dfs - The dfs tag
+ * @property {boolean} bfs - The bfs tag
+ * @property {boolean} binary_search - The binary_search tag
+ * @property {boolean} matrix - The matrix tag
+ * @property {boolean} tree - The tree tag
+ * @property {boolean} bit_manipulation - The bit_manipulation tag
+ * @property {boolean} two_pointer - The two_pointer tag
+ * @property {boolean} heap - The heap tag
+ * @property {boolean} stack - The stack tag
+ * @property {boolean} graph - The graph tag
+ * @property {boolean} sliding_window - The sliding_window tag
+ * @property {boolean} back_tracking - The back_tracking tag
+ * @property {boolean} linked_list - The linked_list tag
+ * @property {boolean} set - The set tag
+ * @property {boolean} queue - The queue tag
+ * @property {boolean} memo - The memo tag
+ * @property {boolean} recursion - The recursion tag
+ * @property {boolean} hashing - The hashing tag
+ * @property {boolean} bit_mask - The bit_mask tag
+ */
+
+/**
  * How the important metadata for each question is stored in the database
- * @typedef {Object} important
+ * @typedef {Object} Metadata
  * @property {string} title - The title of the question
  * @property {number} difficulty_sum - The sum of the difficulty ratings of the question
  * @property {number} difficulty_votes - The number of difficulty ratings given to the question
+ * @property {number} difficulty - The average difficulty rating of the question
  * @property {number} votes_bad - The number of "bad" votes given to the question
  * @property {number} votes_good - The number of "good" votes given to the question
- * @property {string[]} tags - The tags associated with the question
+ * @property {number} votes_sum - The sum of the votes given to the question
+ * @property {Tags} tags - The tags associated with the question
  * @property {string} questionid - The id of the question
  * @property {string[]} languages - The languages the question is available in
  * @property {boolean} display_publicly - Whether the question is public
@@ -64,7 +97,7 @@
  * @typedef {Object} QuestionData
  * @property {CodeData[]} code - The code data available for the question
  * @property {TestCase[]} test_cases - The test cases
- * @property {important} important - The important metadata
+ * @property {Metadata} metadata - The important metadata
  * @property {string} description - The description of the question
  */
 
@@ -87,4 +120,46 @@
  * @property {boolean} accepted_are_public - Whether the user's accepted challenges are displayed on their profile
  * @property {boolean} points_are_public - Whether the user's points are displayed on their profile
  * @property {boolean} ownership_is_public - Whether the user's name appears on challenges they create
+ */
+
+/**
+ * The user data passed for the leaderboard
+ * @typedef {Object} LeaderboardUserData
+ * @property {string} github_id - The user's github id
+ * @property {string} display_name - The user's display name
+ * @property {string} avatar - The user's avatar URL (github url)
+ * @property {number} points_accumulated - The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
+ */
+
+//
+// Data Query Types
+//
+
+/**
+ * An object defining options for a query. All fields are required. Leave fields empty if not needed/wanted.
+ * @typedef {Object} QueryOptions
+ * @property {string} filter_tag - The question tag to filter by, only one is allowed. Leave empty if not wanted
+ * @property {string} order_by - The field to order by. Can be empty string, "difficulty", "votes", "updated", or "created"
+ * @property {number} limit - The maximum number of results to return. Absolute max is 20
+ * @property {string} start_after - The question ID to start after. Leave empty if not wanted. Cannot have both start_after and start_at
+ * @property {string} start_at - The question ID to start at. Leave empty if not wanted. Cannot have both start_after and start_at
+ * @property {string} difficulty - The difficulty to filter by. "easy", "medium", "hard", or empty string. Easy is 0.0-3.2, medium is 3.3-6.6, hard is 6.7-10.0, empty is no filter
+ * @property {string} difficulty_range - The difficulty range to filter by, if custom range is wanted. Format is "0.0-10.0". Range is inclusive and must be between 0.0-10.0. Leave empty if not wanted. Only gets checked if "difficulty" is empty
+ * @property {string} author - The author ID to filter by. Leave empty if not wanted
+ */
+
+//
+// Public User Data Type
+//
+
+/**
+ * The publicly available user data structure
+ * @typedef {Object} PublicUserData
+ * @property {string[] | undefined} accepted - (Optional) The list of challenges the user has completed
+ * @property {string[] | undefined} created - (Optional) The list of challenges the user has created
+ * @property {string} github_id - The user's github id
+ * @property {string} username - The user's username
+ * @property {string} display_name - The user's display name
+ * @property {string} avatar - The user's avatar URL (github url)
+ * @property {number | undefined} points_accumulated - (Optional) The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
  */

@@ -1,21 +1,53 @@
-import { dateToTimestamp } from "@/lib/epoch";
 import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
-import { generateRandomString } from "@/lib/rand_string";
 import { db } from "@/lib/database/firebase";
+import {
+  dateToTimestamp,
+  generateRandomString,
+  deepCopy,
+} from "@/lib/utilities";
 
-import /** @type {FirebaseTimestamp}, @type {Error}, @type {CodeData}, @type {TestCase}, @type {important}, @type {QuestionData} */ "@/lib/database/types";
+import /** @type {FirebaseTimestamp}, @type {DatabaseError}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
 
 /** @type {QuestionData} */
 const base_question_data = {
   code: [],
   test_cases: [],
-  important: {
+  metadata: {
     title: "Example Title",
     difficulty_sum: 0,
     difficulty_votes: 0,
+    difficulty: 0,
     votes_bad: 0,
     votes_good: 0,
-    tags: [],
+    votes_sum: 0,
+    tags: {
+      array: false,
+      string: false,
+      hash_table: false,
+      dp: false,
+      math: false,
+      sorting: false,
+      greedy: false,
+      dfs: false,
+      bfs: false,
+      binary_search: false,
+      matrix: false,
+      tree: false,
+      bit_manipulation: false,
+      two_pointer: false,
+      heap: false,
+      stack: false,
+      graph: false,
+      sliding_window: false,
+      back_tracking: false,
+      linked_list: false,
+      set: false,
+      queue: false,
+      memo: false,
+      recursion: false,
+      hashing: false,
+      bit_mask: false,
+    },
     questionid: "Example ID",
     languages: [],
     display_publicly: true,
@@ -58,10 +90,16 @@ function validateQuestionData(questionData) {
   if (questionData.code.length === 0) {
     return { status: false, reason: "No valid code objects" };
   }
-  // Ensure all keys in important are present
-  for (const key of Object.keys(base_question_data.important)) {
-    if (questionData.important[key] === undefined) {
-      return { status: false, reason: `Missing important key: ${key}` };
+  // Ensure all keys in metadata are present
+  for (const key of Object.keys(base_question_data.metadata)) {
+    if (questionData.metadata[key] === undefined) {
+      return { status: false, reason: `Missing metadata key: ${key}` };
+    }
+  }
+  // Ensure all tags are present
+  for (const key of Object.keys(base_question_data.metadata.tags)) {
+    if (questionData.metadata.tags[key] === undefined) {
+      return { status: false, reason: `Missing tag: ${key}` };
     }
   }
   // Ensure all keys in every object in code are present
@@ -74,10 +112,8 @@ function validateQuestionData(questionData) {
   }
   // Ensure all keys in every object in test_cases are present
   for (const test_case of questionData.test_cases) {
-    for (const key of Object.keys(base_question_data.test_cases[0])) {
-      if (!test_case[key]) {
-        return { status: false, reason: `Missing test case key: ${key}` };
-      }
+    if (!test_case["key"]) {
+      return { status: false, reason: `Missing test case key: ${key}` };
     }
   }
   return { status: true };
@@ -86,7 +122,7 @@ function validateQuestionData(questionData) {
 /**
  * Adds a question to the database. Must at least have 1 code object. All fields must be present and valid, id in questionid will be overwritten.
  * @param {QuestionData} questionData - The question data
- * @returns {QuestionData | Error} The question data
+ * @returns {QuestionData | DatabaseError} The question data
  */
 async function addQuestion(questionData) {
   try {
@@ -102,7 +138,7 @@ async function addQuestion(questionData) {
         return { error: question.error };
       }
       // Set the id
-      questionData.important.questionid = questionId;
+      questionData.metadata.questionid = questionId;
       // Add the question
       return updateQuestion(questionId, questionData);
     }
@@ -115,7 +151,7 @@ async function addQuestion(questionData) {
 /**
  * Retrieves a question from the database
  * @param {string} questionId - The question's id
- * @returns {QuestionData | Error} The question data or an error message
+ * @returns {QuestionData | DatabaseError} The question data or an error message
  */
 async function getQuestion(questionId) {
   try {
@@ -138,7 +174,7 @@ async function getQuestion(questionId) {
  * Updates a question in the database. Completely overwrites, so all fields in data must be present and valid.
  * @param {string} questionId - The question's id
  * @param {QuestionData} data - The question data
- * @returns {QuestionData | Error} The question data
+ * @returns {QuestionData | DatabaseError} The question data
  */
 async function updateQuestion(questionId, data) {
   try {
@@ -152,7 +188,7 @@ async function updateQuestion(questionId, data) {
 
     // The "questions-short" is used for quick access question metadata without the full question data
     const shortQuestionRef = doc(db, "questions-short", questionId);
-    await setDoc(shortQuestionRef, data.important);
+    await setDoc(shortQuestionRef, data.metadata);
 
     return data;
   } catch (e) {
@@ -164,7 +200,7 @@ async function updateQuestion(questionId, data) {
 /**
  * Deletes a question from the database
  * @param {string} questionId - The question's id
- * @returns {void | Error}
+ * @returns {void | DatabaseError}
  */
 async function deleteQuestion(questionId) {
   try {
@@ -179,27 +215,14 @@ async function deleteQuestion(questionId) {
 }
 
 /**
- * Deep copies an object recursively
- * @param {any} obj - The object to copy
- * @returns {any} The copied object
- */
-function deepCopy(obj) {
-  if (typeof obj !== "object" || obj === null) {
-    return obj;
-  }
-  const copy = Array.isArray(obj) ? [] : {};
-  for (let key in obj) {
-    copy[key] = deepCopy(obj[key]);
-  }
-  return copy;
-}
-
-/**
  * Returns the base question data structure
  * @returns {QuestionData}
  */
 function getBaseQuestionData() {
-  return deepCopy(base_question_data);
+  const question_data = deepCopy(base_question_data);
+  question_data.metadata.date_created = dateToTimestamp(new Date());
+  question_data.metadata.date_updated = dateToTimestamp(new Date());
+  return question_data;
 }
 
 export {
