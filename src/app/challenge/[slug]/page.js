@@ -57,6 +57,7 @@ export default function Page() {
         const result = await response.json();
 
         setOutput(
+          // result.message appears if there is an error in input to Piston
           result.message
             ? `Execution Error: ${result.message}`
             : result.compile?.stderr
@@ -78,6 +79,7 @@ export default function Page() {
         } else {
           setQuestion(data);
 
+          // Set editor settings using question metadata
           if (data.code && data.code.length > 0) {
             const codeObj = data.code[0];
             setEditorSettings({
@@ -136,12 +138,5 @@ export default function Page() {
         </div>
       </div>
     </div>
-    // export default function ClientComponent() {
-    //   return (
-    //     <>
-    //       <div className="min-h-screen bg-[#222222] text-white p-8 px-14">
-    //         <div>{question_data}</div>
-    //       </div>
-    //     </>
   );
 }
