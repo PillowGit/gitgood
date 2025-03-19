@@ -76,6 +76,16 @@ import { NextResponse } from "next/server";
  *                      type: string
  *                      nullable: true
  *                      description: Signal from the compile process. Null if code is not null.
+ *      400:
+ *        description: Bad request or validation error from Piston API.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message from Piston API.
  *      500:
  *        description: Execution failed.
  *        content:
@@ -108,10 +118,19 @@ export async function POST(req) {
       }),
     });
 
+    // Check if Piston returned an error
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      return NextResponse.json(
+        { message: errorResponse.message || "Execution failed." },
+        { status: response.status }
+      )
+    }
+
     const result = await response.json();
 
     return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json({ error: "Execution failed" }, { status: 500 });
+    return NextResponse.json({ error: "Execution failed. " + error.message }, { status: 500 });
   }
 }

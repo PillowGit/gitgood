@@ -127,6 +127,22 @@
               }
             }
           },
+          "400": {
+            "description": "Bad request or validation error from Piston API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message from Piston API."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Execution failed.",
             "content": {
