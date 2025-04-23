@@ -37,6 +37,49 @@ function validateSubmissionData(data) {
 }
 
 /**
+ * Adds a submission to the database
+ * @param {string} creator_id - The id of the user who created the submission
+ * @param {string} question_id - The id of the question
+ * @param {string[]} code - The code submitted by the user
+ * @param {string} piston_output - The output of the code
+ * @param {boolean} passed - Whether the code passed the test cases
+ * @param {string} language - The language the code was written in
+ * @returns {SubmissionData | DatabaseError} The submission data or an error message
+ */
+async function addSubmission() {
+  try {
+    let submission_id = generateRandomString(16);
+    while (true) {
+      const check = await getSubmission(submission_id);
+      if (check.error && check.error === "Submission not found") {
+        break;
+      }
+      submission_id = generateRandomString(16);
+    }
+    const submissionData = {
+      date_created: dateToTimestamp(new Date()),
+      submission_id,
+      creator_id,
+      question_id,
+      code,
+      piston_output,
+      passed,
+      language,
+    };
+    if (!validateSubmissionData(submissionData)) {
+      return { error: "Invalid submission data" };
+    }
+    // On collection "submissions"
+    const docRef = doc(db, "submissions", submission_id);
+    await setDoc(docRef, submissionData);
+    return submissionData;
+  } catch (e) {
+    console.log("Caught error while adding submission to database", e);
+    return { error: e.message };
+  }
+}
+
+/**
  * Retrieves a submission from the database
  * @param {string} submission_id - The id of the submission
  * @returns {SubmissionData | DatabaseError} The submission data or an error message
