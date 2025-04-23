@@ -98,3 +98,18 @@ async function getSubmission(submission_id) {
     return { error: e.message };
   }
 }
+
+/**
+ * Deletes a submission from the database
+ * @param {string} submission_id - The id of the submission
+ * @returns {void | DatabaseError} The submission data or an error message
+ */
+async function deleteSubmission(submission_id) {
+  try {
+    const submissionRef = doc(db, "submissions", submission_id);
+    await deleteDoc(submissionRef);
+  } catch (e) {
+    console.log("Caught error while deleting submission from database", e);
+    return { error: e.message };
+  }
+}
