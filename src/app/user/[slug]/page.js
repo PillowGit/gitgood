@@ -32,37 +32,39 @@ export default function UserProfile() {
   const [saveMessage, setSaveMessage] = useState(null);
 
   useEffect(() => {
-    // Fetch user data
-    fetch(`/api/users/${slug}`, { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setUser(data);
-          setDisplayName(data.display_name);
-          if (data.points_are_public !== undefined) {
-            setSettings({
-              points_are_public: data.points_are_public,
-              accepted_are_public: data.accepted_are_public,
-              ownership_is_public: data.ownership_is_public
-            });
-          }
+    if (!user || loading) {
+      // Fetch user data
+      fetch(`/api/users/${slug}`, { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+          } else {
+            setUser(data);
+            setDisplayName(data.display_name);
+            if (data.points_are_public !== undefined) {
+              setSettings({
+                points_are_public: data.points_are_public,
+                accepted_are_public: data.accepted_are_public,
+                ownership_is_public: data.ownership_is_public
+              });
+            }
 
-          // Check if this is the logged-in user's profile
-          if (session?.user && session.user.image) {
-            const match = session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1];
-            if (match && match === data.github_id) {
-              setIsOwnProfile(true);
+            // Check if this is the logged-in user's profile
+            if (session?.user && session.user.image) {
+              const match = session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1];
+              if (match && match === data.github_id) {
+                setIsOwnProfile(true);
+              }
             }
           }
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        setError("Failed to load profile data");
-        setLoading(false);
-      });
+          setLoading(false);
+        })
+        .catch(err => {
+          setError("Failed to load profile data");
+          setLoading(false);
+        });
+    }
   }, [slug, session]);
 
   // Handle profile settings update
@@ -280,8 +282,8 @@ export default function UserProfile() {
                     onClick={handleSaveSettings}
                     disabled={isSaving}
                     className={`mt-4 w-full py-2 rounded-lg font-medium ${isSaving
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700'
+                      ? 'bg-gray-600 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700'
                       }`}
                   >
                     {isSaving ? 'Saving...' : 'Save Settings'}
