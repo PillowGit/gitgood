@@ -10,6 +10,15 @@ const nextConfig = {
     FIREBASE_MESSAGINGSENDERID: process.env.FIREBASE_MESSAGINGSENDERID,
     FIREBASE_APPID: process.env.FIREBASE_APPID,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        pathname: '**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
