@@ -224,3 +224,163 @@ export async function GET(req, { params }) {
     }
   }
 }
+
+/**
+ * @openapi
+ * /api/users/{userId}:
+ *  patch:
+ *    summary: Update user settings for the authenticated user.
+ *    description: Update profile settings for the authenticated user. Only works if the authenticated user is updating their own profile.
+ *    parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to update.
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              display_name:
+ *                type: string
+ *                description: Updated display name.
+ *              points_are_public:
+ *                type: boolean
+ *                description: Whether to show points publicly.
+ *              accepted_are_public:
+ *                type: boolean
+ *                description: Whether to show completed challenges publicly.
+ *              ownership_is_public:
+ *                type: boolean
+ *                description: Whether to show created challenges publicly.
+ *    responses:
+ *      200:
+ *        description: User settings updated successfully.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  description: Indicates if the operation was successful.
+ *                message:
+ *                  type: string
+ *                  description: Success message.
+ *      400:
+ *        description: Bad request or invalid input.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Error message.
+ *      401:
+ *        description: Unauthorized - User not authenticated.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Error message.
+ *      403:
+ *        description: Forbidden - User trying to modify another user's profile.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Error message.
+ *      404:
+ *        description: User not found.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                error:
+ *                  type: string
+ *                  description: Error message.
+ */
+export async function PATCH(req, { params }) {
+  const { userId } = await params;
+
+  // Ensure request is valid
+  if (!userId) {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
+
+  // Get session info to authenticate the user
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
+  // Extract github_id from the user's image URL
+  const github_id = session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1];
+
+  // Verify that the user is updating their own profile
+  if (userId !== github_id) {
+    return NextResponse.json(
+      { error: "User can only update their own profile" },
+      { status: 403 }
+    );
+  }
+
+  try {
+    // Parse the request body to get the updated settings
+    const updateData = await req.json();
+    const allowedFields = [
+      "display_name",
+      "points_are_public",
+      "accepted_are_public",
+      "ownership_is_public"
+    ];
+
+    // Filter to only include allowed fields
+    const sanitizedData = Object.keys(updateData)
+      .filter(key => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        // Skip undefined values completely
+        if (updateData[key] === undefined) return obj;
+
+        // Empty strings should be converted to null for Firebase
+        obj[key] = updateData[key] === "" ? null : updateData[key];
+        return obj;
+      }, {});
+
+    if (Object.keys(sanitizedData).length === 0) {
+      return NextResponse.json(
+        { error: "No valid fields to update" },
+        { status: 400 }
+      );
+    }
+
+    // Update the user data in the database
+    await updateUser(userId, sanitizedData);
+
+    return NextResponse.json({
+      success: true,
+      message: "Profile updated successfully"
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return NextResponse.json(
+      { error: "Failed to update profile" },
+      { status: 500 }
+    );
+  }
+}
