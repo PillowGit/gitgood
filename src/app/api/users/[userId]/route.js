@@ -12,7 +12,7 @@ import {
 async function SyncGithubUsername(userId, username) {
   const githubUserData = await fetch(`https://api.github.com/user/${userId}`);
   const githubUser = await githubUserData.json();
-  if (githubUser?.login !== username) {
+  if (githubUser?.login && githubUser?.login !== username) {
     await updateUser(userId, { username: githubUser.login });
     return true;
   }
@@ -21,7 +21,7 @@ async function SyncGithubUsername(userId, username) {
 async function SyncGithubDisplayName(userId, display_name) {
   const githubUserData = await fetch(`https://api.github.com/user/${userId}`);
   const githubUser = await githubUserData.json();
-  if (githubUser?.name !== display_name) {
+  if (githubUser?.name && githubUser?.name !== display_name) {
     await updateUser(userId, { display_name: githubUser.name });
     return true;
   }
