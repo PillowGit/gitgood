@@ -35,3 +35,23 @@ function validateSubmissionData(data) {
   }
   return true;
 }
+
+/**
+ * Retrieves a submission from the database
+ * @param {string} submission_id - The id of the submission
+ * @returns {SubmissionData | DatabaseError} The submission data or an error message
+ */
+async function getSubmission(submission_id) {
+  try {
+    const submissionRef = doc(db, "submissions", submission_id);
+    const submissionSnap = await getDoc(submissionRef);
+    if (!submissionSnap.exists()) {
+      return { error: "Submission not found" };
+    }
+    const submissionData = submissionSnap.data();
+    return submissionData;
+  } catch (e) {
+    console.log("Caught error while getting submission from database", e);
+    return { error: e.message };
+  }
+}
