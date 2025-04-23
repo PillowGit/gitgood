@@ -163,3 +163,20 @@
  * @property {string} avatar - The user's avatar URL (github url)
  * @property {number | undefined} points_accumulated - (Optional) The user's total points (calculated by the sum of the difficulty rating of all accepted challenges)
  */
+
+//
+// Submission Data Type
+//
+
+/**
+ * The base user data structure
+ * @typedef {Object} SubmissionData
+ * @property {string} submission_id - The id of the submission
+ * @property {string} creator_id - The id of the user who created the submission
+ * @property {string} question_id - The id of the question
+ * @property {string[]} code - The code submitted by the user
+ * @property {string} piston_output - The output of the code
+ * @property {boolean} passed - Whether the code passed the test cases
+ * @property {string} language - The language the code was written in
+ * @property {FirebaseTimestamp} date_created - The date the submission was created
+ */
