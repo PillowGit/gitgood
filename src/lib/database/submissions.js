@@ -113,3 +113,38 @@ async function deleteSubmission(submission_id) {
     return { error: e.message };
   }
 }
+
+/**
+ * Queries on the last 10 submissions from the collection with question_id && creator_id
+ * @param {string} question_id - The id of the question
+ * @param {string} creator_id - The id of the user who created the submission
+ * @returns {SubmissionData[] | DatabaseError} The submission data or an error message
+ */
+async function querySubmissions(question_id, creator_id) {
+  try {
+    const query_params = [];
+    query_params.push(collection(db, "submissions"));
+    query_params.push(where("question_id", "==", question_id));
+    query_params.push(where("creator_id", "==", creator_id));
+    query_params.push(orderBy("date_created", "desc"));
+    query_params.push(limit(10));
+    const q = query(...query_params);
+    const querySnapshot = await getDocs(q);
+    const submissions = [];
+    querySnapshot.forEach((queryDocSnap) => {
+      submissions.push(queryDocSnap.data());
+    });
+    return submissions;
+  } catch (e) {
+    console.log("Caught error while querying submissions from database", e);
+    return { error: e.message };
+  }
+}
+
+export {
+  validateSubmissionData,
+  addSubmission,
+  getSubmission,
+  deleteSubmission,
+  querySubmissions,
+};
