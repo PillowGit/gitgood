@@ -88,7 +88,7 @@ export async function POST(req, { params }) {
     ? ""
     : session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1];
   const user = await getUser(user_id);
-  if (!user) {
+  if (!user || user.error) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
