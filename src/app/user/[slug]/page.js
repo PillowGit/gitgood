@@ -95,14 +95,15 @@ export default function UserProfile() {
       });
 
       if (response.ok) {
-        setSaveMessage({ type: 'success', text: 'Settings saved successfully!' });
+        setSaveMessage({ type: 'success', text: 'Saved successfully!' });
         // Update the local state with the new settings
         setUser(prev => ({ ...prev, ...sanitizedData }));
       } else {
         const errorData = await response.json();
-        setSaveMessage({ type: 'error', text: errorData.error || 'Failed to save settings' });
+        setSaveMessage({ type: 'error', text: errorData.error || 'Failed to save' });
       }
     } catch (err) {
+      console.error("Error saving settings:", err);
       setSaveMessage({ type: 'error', text: 'An error occurred while saving' });
     } finally {
       setIsSaving(false);
@@ -160,17 +161,18 @@ export default function UserProfile() {
               {isOwnProfile && (
                 isEditingName ? (
                   <button
-                    onClick={() => setIsEditingName(false)}
+                    onClick={() => { setIsEditingName(false); handleSaveSettings(); }}
                     className="ml-2 text-sm bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded"
+                    disabled={isSaving}
                   >
-                    Done
+                    Save
                   </button>
                 ) : (
                   <button
                     onClick={() => setIsEditingName(true)}
                     className="ml-2 text-sm bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
                   >
-                    Edit
+                      {isSaving ? 'Saving...' : 'Edit'}
                   </button>
                 )
               )}
