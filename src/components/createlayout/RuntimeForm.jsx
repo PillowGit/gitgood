@@ -1,6 +1,7 @@
 "use client";
 
 import Editor from "@monaco-editor/react";
+import { languageList } from "@/constants/languageList";
 
 function RuntimeForm({
   codeLanguage,
@@ -27,21 +28,23 @@ function RuntimeForm({
           </strong>
         </label>
         <label className="block text-sm">
-          What Language does this problem use? (you can add additional
+          What language does this problem use? (you can add additional
           submission languages after publishing)
         </label>
         <select
           className="w-full bg-[#333333] border-none text-white p-3 rounded"
-          defaultValue="C++"
           value={codeLanguage}
           onChange={e => setCodeLanguage(e.target.value)}
         >
-          <option value="C++">C++</option>
-          <option value="Java">Java</option>
-          <option value="Python">Python</option>
-          <option value="Python3">Python3</option>
-          <option value="C">C</option>
-          <option value="JavaScript">JavaScript</option>
+          <option value="c++">c++</option>
+          <option value="python">python3</option>
+          {languageList.map(language => {
+            return (
+              <option key={language} value={language}>
+                {language}
+              </option>
+            );
+          })}
         </select>
       </div>
 
@@ -53,8 +56,8 @@ function RuntimeForm({
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
             id="parseCode"
-            language={mapLanguage(codeLanguage) || "javascript"}
-            onChange={(value, event) => setInputs(value)}
+            language={mapLanguage(codeLanguage)}
+            onChange={(value, event) => setInputs(value?.split("\n") || [])}
             theme="vs-dark"
             defaultValue={`std::vector<void*> parsed;
 void parser() {
@@ -77,8 +80,8 @@ void parser() {
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
             id="codeTemplate"
-            language={mapLanguage(codeLanguage) || "javascript"}
-            onChange={(value, event) => setCodeTemplate(value)}
+            language={mapLanguage(codeLanguage)}
+            onChange={(value, event) => setCodeTemplate(value?.split("\n") || [])}
             theme="vs-dark"
             defaultValue={`void solution() {
   // code here
@@ -100,8 +103,8 @@ void parser() {
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
             id="codeSolution"
-            language={mapLanguage(codeLanguage) || "javascript"}
-            onChange={(value, event) => setCodeSolution(value)}
+            language={mapLanguage(codeLanguage)}
+            onChange={(value, event) => setCodeSolution(value?.split("\n") || [])}
             theme="vs-dark"
             defaultValue={`void solution() {
   // code here
@@ -127,8 +130,8 @@ void parser() {
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
             id="parseCode"
-            language={mapLanguage(codeLanguage) || "javascript"}
-            onChange={(value, event) => setTester(value)}
+            language={mapLanguage(codeLanguage)}
+            onChange={(value, event) => setTester(value?.split("\n") || [])}
             theme="vs-dark"
             defaultValue={`void testing() {
   // code here

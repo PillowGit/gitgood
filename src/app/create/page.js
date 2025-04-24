@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import BasicInfoForm from "@/components/createlayout/BasicInfoForm";
 import TestCasesForm from "@/components/createlayout/TestCasesForm";
 import RuntimeForm from "@/components/createlayout/RuntimeForm";
+import { useSession } from "next-auth/react"; // Or your auth method
 
 /**
  * Helper function to map language names to editor identifiers.
@@ -12,9 +13,6 @@ import RuntimeForm from "@/components/createlayout/RuntimeForm";
 function mapLanguage(lang) {
   const normalized = lang.trim().toLowerCase();
   if (normalized === "c++" || normalized === "c") return "cpp";
-  if (normalized === "javascript") return "javascript";
-  if (normalized === "java") return "java";
-  if (normalized === "python" || normalized === "python3") return "python";
   return normalized;
 }
 
@@ -54,16 +52,34 @@ export default function CreateQuestion() {
   });
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [codeTemplate, setCodeTemplate] = useState("");
-  const [inputs, setInputs] = useState("");
-  const [tester, setTester] = useState("");
-  const [codeSolution, setCodeSolution] = useState("");
+  const [codeTemplate, setCodeTemplate] = useState([]);
+  const [inputs, setInputs] = useState([]);
+  const [tester, setTester] = useState([]);
+  const [codeSolution, setCodeSolution] = useState([]);
   const [testCases, setTestCases] = useState([
     { ANSWER: "15", inputs: { n: "5", arr: "[1, 2, 3, 4, 5]" } },
     { ANSWER: "1", inputs: { n: "1", arr: "[1]" } }
   ]);
   const [activeTab, setActiveTab] = useState("basic-info");
   const [codeLanguage, setCodeLanguage] = useState("C++");
+
+  const { data: session, status } = useSession();
+  const isSignedIn = !!session;
+
+  const isFormValid = () => {
+    return (
+      isSignedIn &&
+      title.trim() &&
+      description.trim() &&
+      codeTemplate.length > 0 &&
+      codeSolution.length > 0 &&
+      tester.length > 0 &&
+      inputs.length > 0 &&
+      languages.length > 0 &&
+      Object.values(tags).some(Boolean) &&
+      testCases.length > 0
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,10 +96,10 @@ export default function CreateQuestion() {
       },
       code: {
         language: codeLanguage,
-        inputs: [inputs],
-        template: [codeTemplate],
-        solution: [codeSolution],
-        tester: [tester]
+        inputs: inputs,
+        template: codeTemplate,
+        solution: codeSolution,
+        tester: tester
       },
       test_cases: testCases
     };
@@ -97,6 +113,7 @@ export default function CreateQuestion() {
 
       if (response.ok) {
         alert("Question created successfully!");
+        console.log(newQuestion);
       } else {
         const data = await response.json();
         alert(`Error: ${data.error}`);
@@ -196,7 +213,13 @@ export default function CreateQuestion() {
 
         <button
           type="submit"
-          className="w-full bg-[#4a4a4a] hover:bg-[#5a5a5a] text-white py-3 px-4 rounded transition-colors"
+          disabled={!isFormValid()}
+          className={`w-full text-white py-3 px-4 rounded transition-colors
+    ${
+      isFormValid()
+        ? "bg-[#4a4a4a] hover:bg-[#5a5a5a]"
+        : "bg-[#1a1a1a] text-gray-500 cursor-not-allowed"
+    }`}
         >
           Create Question
         </button>

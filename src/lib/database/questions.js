@@ -3,7 +3,7 @@ import { db } from "@/lib/database/firebase";
 import {
   dateToTimestamp,
   generateRandomString,
-  deepCopy,
+  deepCopy
 } from "@/lib/utilities";
 
 import /** @type {FirebaseTimestamp}, @type {DatabaseError}, @type {CodeData}, @type {TestCase}, @type {Tags}, @type {Metadata}, @type {QuestionData} */ "@/lib/database/types";
@@ -46,7 +46,7 @@ const base_question_data = {
       memo: false,
       recursion: false,
       hashing: false,
-      bit_mask: false,
+      bit_mask: false
     },
     questionid: "Example ID",
     languages: [],
@@ -54,9 +54,9 @@ const base_question_data = {
     author_id: "Example Author ID",
     author_name: "Anonymous",
     date_created: dateToTimestamp(new Date()),
-    date_updated: dateToTimestamp(new Date()),
+    date_updated: dateToTimestamp(new Date())
   },
-  description: "Example Description",
+  description: "Example Description"
 };
 
 /** @type {CodeData} */
@@ -65,7 +65,7 @@ const fake_code_data = {
   inputs: [],
   template: [],
   solution: [],
-  tester: [],
+  tester: []
 };
 
 /**
@@ -112,8 +112,8 @@ function validateQuestionData(questionData) {
   }
   // Ensure all keys in every object in test_cases are present
   for (const test_case of questionData.test_cases) {
-    if (!test_case["key"]) {
-      return { status: false, reason: `Missing test case key: ${key}` };
+    if (!test_case["inputs"]) {
+      return { status: false, reason: `Missing test case inputs: ${key}` };
     }
   }
   return { status: true };
@@ -231,5 +231,5 @@ export {
   updateQuestion,
   deleteQuestion,
   getBaseQuestionData,
-  validateQuestionData,
+  validateQuestionData
 };

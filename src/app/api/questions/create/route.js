@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/auth";
 import {
   validateQuestionData,
   getBaseQuestionData,
-  addQuestion,
+  addQuestion
 } from "@/lib/database/questions";
 import { getUser } from "@/lib/database/users";
 
@@ -105,8 +105,8 @@ import { getUser } from "@/lib/database/users";
  *                    ANSWER:
  *                      type: string
  *                      description: The expected output of the test case.
- *                    key:
- *                      type: string
+ *                    inputs:
+ *                      type: object
  *                      description: Key-value pairs representing inputs and expected outputs.
  *    responses:
  *      201:
@@ -223,10 +223,10 @@ export async function POST(req) {
         author_id: github_id,
         author_name: githubUser.login,
         difficulty:
-          data.metadata.difficulty_sum / data.metadata.difficulty_votes,
+          data.metadata.difficulty_sum / data.metadata.difficulty_votes
       },
       code: [data.code], // Only one code object initially
-      test_cases: data.test_cases,
+      test_cases: data.test_cases
     };
 
     // Validate question data
