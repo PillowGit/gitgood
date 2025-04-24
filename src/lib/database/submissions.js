@@ -134,7 +134,7 @@ async function querySubmissions(question_id, creator_id) {
     query_params.push(where("question_id", "==", question_id));
     query_params.push(where("creator_id", "==", creator_id));
     query_params.push(orderBy("date_created", "desc"));
-    query_params.push(limit(10));
+    query_params.push(limit(100));
     const q = query(...query_params);
     const querySnapshot = await getDocs(q);
     const submissions = [];
