@@ -810,8 +810,8 @@
                           "type": "string",
                           "description": "The expected output of the test case."
                         },
-                        "key": {
-                          "type": "string",
+                        "inputs": {
+                          "type": "object",
                           "description": "Key-value pairs representing inputs and expected outputs."
                         }
                       }
