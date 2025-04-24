@@ -134,7 +134,10 @@ function RuntimeForm({
             defaultValue={`void testing() {
   for (int i = 0; i < testCases.size(); i++) {
     int n = testCases[i]
-    if (isNOdd(n) != solution(n)) { std::cout << i; }
+    if (isNOdd(n) != solution(n)) { 
+      std::cout << i + 1; 
+      return;
+    }
   }
   std::cout << "all";
 }`}
