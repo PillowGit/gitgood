@@ -60,6 +60,9 @@ async function addUser(userId, username, display_name, avatar) {
  * @returns {UserData | DatabaseError} The user's data or an error message
  */
 async function getUser(userId) {
+  if (!userId) {
+    return { error: "User ID is invalid" };
+  }
   try {
     // Fetch from Firestore
     const userRef = doc(db, "users", userId);
