@@ -189,19 +189,19 @@ export default function UserProfile() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Left Column - Stats */}
           <div className="col-span-2">
-            <div className="bg-gray-800 rounded-xl p-6 mb-6">
+            <div className="bg-gray-800 rounded-xl p-6 mb-6 flex flex-col min-h-[300px]">
               <h2 className="text-xl font-semibold mb-4">Challenge Stats</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-700 p-4 rounded-lg text-center">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow">
+                <div className="bg-gray-700 p-4 rounded-lg text-center flex flex-col justify-center">
                   <p className="text-gray-400 text-sm">Completed</p>
                   <p className="text-2xl font-bold">{user.accepted?.length || 0}</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg text-center">
+                <div className="bg-gray-700 p-4 rounded-lg text-center flex flex-col justify-center">
                   <p className="text-gray-400 text-sm">Created</p>
                   <p className="text-2xl font-bold">{user.created?.length || 0}</p>
                 </div>
-                <div className="bg-gray-700 p-4 rounded-lg text-center">
+                <div className="bg-gray-700 p-4 rounded-lg text-center flex flex-col justify-center">
                   <p className="text-gray-400 text-sm">Attempted</p>
                   <p className="text-2xl font-bold">{user.attempted?.length || 0}</p>
                 </div>
@@ -240,7 +240,7 @@ export default function UserProfile() {
           {/* Right Column - Settings (only shown if it's the user's own profile) */}
           {isOwnProfile && (
             <div className="col-span-1">
-              <div className="bg-gray-800 rounded-xl p-6">
+              <div className="bg-gray-800 rounded-xl p-6 min-h-[300px]">
                 <h2 className="text-xl font-semibold mb-4">Profile Settings</h2>
 
                 <div className="space-y-4">
