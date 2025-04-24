@@ -56,7 +56,10 @@ export default function CreateQuestion() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [codeTemplate, setCodeTemplate] = useState("");
   const [codeSolution, setCodeSolution] = useState("");
-  const [testCases, setTestCases] = useState([{ ANSWER: "", key: {} }]);
+  const [testCases, setTestCases] = useState([
+    { ANSWER: "15", inputs: { n: "5", arr: "[1, 2, 3, 4, 5]" } },
+    { ANSWER: "1", inputs: { n: "1", arr: "[1]" } }
+  ]);
   const [activeTab, setActiveTab] = useState("basic-info");
   const [codeLanguage, setCodeLanguage] = useState("C++");
 
