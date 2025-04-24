@@ -113,7 +113,7 @@ function validateQuestionData(questionData) {
   // Ensure all keys in every object in test_cases are present
   for (const test_case of questionData.test_cases) {
     if (!test_case["inputs"]) {
-      return { status: false, reason: `Missing test case inputs: ${key}` };
+      return { status: false, reason: "Missing test case inputs" };
     }
   }
   return { status: true };
