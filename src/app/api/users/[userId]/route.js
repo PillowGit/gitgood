@@ -225,6 +225,54 @@ export async function GET(req, { params }) {
   }
 }
 
+/**
+ * @openapi
+ * /api/users/{userId}:
+ *   put:
+ *     summary: Add a question ID to the user's created challenges
+ *     description: |
+ *       Authenticated users may append a newly created challenge ID to their
+ *       own `created` array. The user must be signed in via NextAuth and may
+ *       only modify their own record.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: GitHub ID of the user whose record to update
+ *     requestBody:
+ *       description: Object containing the ID of the challenge to add
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               challengeId:
+ *                 type: string
+ *                 description: ID of the challenge to append
+ *             required:
+ *               - challengeId
+ *     security:
+ *       - nextAuth: []
+ *     responses:
+ *       200:
+ *         description: The updated user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserData'
+ *       400:
+ *         description: Missing `userId` path parameter or `challengeId` in body
+ *       403:
+ *         description: Unauthorized — session missing or userId mismatch
+ *       404:
+ *         description: User not found
+ */
+
 export async function PUT(req, { params }) {
   const { userId } = params;
 
