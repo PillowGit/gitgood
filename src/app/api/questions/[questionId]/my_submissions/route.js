@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 import { getQuestion } from "@/lib/database/questions";
+import { getUser } from "@/lib/database/users";
 import { querySubmissions } from "@/lib/database/submissions";
 
 /**
@@ -82,3 +83,39 @@ import { querySubmissions } from "@/lib/database/submissions";
  *                error:
  *                  type: string
  */
+export async function GET(req, { params }) {
+  const { questionId } = await params;
+
+  // Ensure request is valid
+  if (!questionId) {
+    return NextResponse.json(
+      { error: "questionId is required" },
+      { status: 400 }
+    );
+  }
+
+  // Confirm login
+  const session = await getServerSession({ req, ...authOptions });
+  const user_id = !session
+    ? ""
+    : session.user.image.match(/githubusercontent.com\/u\/(\d+)/)[1];
+  const user = await getUser(user_id);
+  if (!user || user.error) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const question = await getQuestion(questionId);
+  if (question.error) {
+    return NextResponse.json({ error: "Question not found" }, { status: 404 });
+  }
+
+  const submissions = await querySubmissions(questionId, user_id);
+  if (submissions.error) {
+    return NextResponse.json(
+      { error: "Failed to get submissions" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ submissions }, { status: 200 });
+}
