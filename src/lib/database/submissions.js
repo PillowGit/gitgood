@@ -46,7 +46,14 @@ function validateSubmissionData(data) {
  * @param {string} language - The language the code was written in
  * @returns {SubmissionData | DatabaseError} The submission data or an error message
  */
-async function addSubmission() {
+async function addSubmission(
+  creator_id,
+  question_id,
+  code,
+  piston_output,
+  passed,
+  language
+) {
   try {
     let submission_id = generateRandomString(16);
     while (true) {
