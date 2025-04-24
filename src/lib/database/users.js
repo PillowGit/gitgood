@@ -2,13 +2,15 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
+  arrayUnion,
   deleteDoc,
   collection,
   getDocs,
   query,
   where,
   orderBy,
-  limit,
+  limit
 } from "firebase/firestore";
 import { db } from "@/lib/database/firebase";
 
@@ -27,7 +29,7 @@ const base_user_data = {
   can_create: true,
   accepted_are_public: true,
   points_are_public: true,
-  ownership_is_public: true,
+  ownership_is_public: true
 };
 
 /**
@@ -45,7 +47,7 @@ async function addUser(userId, username, display_name, avatar) {
       github_id: userId,
       username,
       display_name,
-      avatar,
+      avatar
     };
     const result = await updateUser(userId, userData);
     return result;

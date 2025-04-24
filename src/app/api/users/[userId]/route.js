@@ -2,7 +2,12 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 
-import { getUser, addUser, updateUser } from "@/lib/database/users";
+import {
+  getUser,
+  addUser,
+  updateUser,
+  addUserChallenge
+} from "@/lib/database/users";
 
 async function SyncGithubUsername(userId, username) {
   const githubUserData = await fetch(`https://api.github.com/user/${userId}`);
@@ -218,4 +223,49 @@ export async function GET(req, { params }) {
       return NextResponse.json(user);
     }
   }
+}
+
+export async function PUT(req, { params }) {
+  const { userId } = params;
+
+  // Ensure request is valid
+  if (!userId) {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
+
+  // Get session
+  const session = await getServerSession({ req, ...authOptions });
+
+  // Extract GitHub ID from session
+  const github_id = session?.user?.image?.match(
+    /githubusercontent.com\/u\/(\d+)/
+  )?.[1];
+
+  // Must be signed in and user must be modifying their own record
+  if (!session || github_id !== userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  // Parse incoming body
+  const body = await req.json();
+  const { challengeId } = body;
+
+  if (!challengeId) {
+    return NextResponse.json({ error: "Missing challengeId" }, { status: 400 });
+  }
+
+  // Get current user data
+  const user = await getUser(userId);
+  if (user.error) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  // Update the created array
+  const updatedCreated = Array.isArray(user.created)
+    ? [...new Set([...user.created, challengeId])]
+    : [challengeId];
+
+  const updatedUser = await updateUser(userId, { created: updatedCreated });
+
+  return NextResponse.json(updatedUser);
 }

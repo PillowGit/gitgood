@@ -65,6 +65,9 @@ export default function CreateQuestion() {
 
   const { data: session, status } = useSession();
   const isSignedIn = !!session;
+  const githubId = session?.user?.image?.match(
+    /githubusercontent.com\/u\/(\d+)/
+  )?.[1];
 
   const isFormValid = () => {
     return (
@@ -113,7 +116,16 @@ export default function CreateQuestion() {
 
       if (response.ok) {
         alert("Question created successfully!");
-        console.log(newQuestion);
+        const createdQuestion = await response.json();
+        try {
+          await fetch(`/api/users/${githubId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ challengeId: createdQuestion.questionId })
+          });
+        } catch (error) {
+          alert(`Error: ${error}`);
+        }
       } else {
         const data = await response.json();
         alert(`Error: ${data.error}`);
