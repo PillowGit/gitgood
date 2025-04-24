@@ -40,16 +40,16 @@ import { getUser, updateUser } from "@/lib/database/users";
  *                  type: string
  *                description: The code submitted by the user.
  *    responses:
- *      201:
+ *      302:
  *        description: Submission created successfully.
  *        content:
  *          application/json:
  *            schema:
  *              type: object
  *              properties:
- *                submission_id:
+ *                redirect_to:
  *                  type: string
- *                  description: The ID of the created submission.
+ *                  description: The URL to redirect to after submission.
  *      400:
  *        description: Invalid request or missing required fields.
  *        content:
@@ -237,7 +237,7 @@ export async function POST(req, { params }) {
 
   return NextResponse.json(
     {
-      data: `https://gitgood.cc/challenge/${questionId}/${submissionData.submission_id}`,
+      redirect_to: `https://gitgood.cc/challenge/${questionId}/${submissionData.submission_id}`,
     },
     { status: 302 }
   );
