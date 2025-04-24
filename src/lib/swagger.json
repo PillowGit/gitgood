@@ -168,7 +168,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Submission created successfully.",
+            "description": "Query Successful. Returns the list of submissions.",
             "content": {
               "application/json": {
                 "schema": {
