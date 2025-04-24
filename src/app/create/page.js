@@ -55,6 +55,8 @@ export default function CreateQuestion() {
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [codeTemplate, setCodeTemplate] = useState("");
+  const [inputs, setInputs] = useState("");
+  const [tester, setTester] = useState("");
   const [codeSolution, setCodeSolution] = useState("");
   const [testCases, setTestCases] = useState([
     { ANSWER: "15", inputs: { n: "5", arr: "[1, 2, 3, 4, 5]" } },
@@ -78,10 +80,10 @@ export default function CreateQuestion() {
       },
       code: {
         language: codeLanguage,
-        inputs: ["string"],
+        inputs: [inputs],
         template: [codeTemplate],
         solution: [codeSolution],
-        tester: ["string"]
+        tester: [tester]
       },
       test_cases: testCases
     };
@@ -185,6 +187,10 @@ export default function CreateQuestion() {
             setCodeTemplate={setCodeTemplate}
             codeSolution={codeSolution}
             setCodeSolution={setCodeSolution}
+            inputs={inputs}
+            setInputs={setInputs}
+            tester={tester}
+            setTester={setTester}
           />
         )}
 
