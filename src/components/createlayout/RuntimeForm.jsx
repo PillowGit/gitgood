@@ -22,9 +22,10 @@ function RuntimeForm({
         <label className="block text-sm">
           <strong>
             This section handles your challenge's logic. You are responsible for
-            your test cases, how they will be parsed, the template for the user,
-            and the solution. Imagine all of these sections were combined to
-            create one large file.
+            creating all of your test cases, parsing them, providing the template for the user,
+            and running the parsed test cases against your solution. Imagine all of these sections were combined to
+            create one large file. 
+
           </strong>
         </label>
         <label className="block text-sm">
@@ -55,14 +56,11 @@ function RuntimeForm({
         </label>
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
-            id="parseCode"
+            id="inputs"
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setInputs(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`std::vector<void*> parsed;
-void parser() {
-// parsing
-}`}
+            defaultValue={`std::vector<int> testCases = {5, 10, 15, 20};`}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -75,7 +73,7 @@ void parser() {
 
       <div className="space-y-2">
         <label className="block text-sm">
-          Write a template function for users to put their solution in
+          Write the template function that users must complete. Ensure all of the parameters are in the header.
         </label>
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
@@ -83,8 +81,8 @@ void parser() {
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeTemplate(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`void solution() {
-  // code here
+            defaultValue={`bool isNOdd(int n) {
+  // code 
 }`}
             options={{
               fontSize: 14,
@@ -98,7 +96,7 @@ void parser() {
 
       <div className="space-y-2">
         <label className="block text-sm">
-          Write a solution to your problem
+          Write a solution to your problem.
         </label>
         <div className="border border-gray-700 rounded-lg overflow-hidden shadow-lg">
           <Editor
@@ -106,8 +104,8 @@ void parser() {
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeSolution(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`void solution() {
-  // code here
+            defaultValue={`bool solution(int n) {
+  return n % 2;
 }`}
             options={{
               fontSize: 14,
@@ -123,7 +121,7 @@ void parser() {
         <label className="block text-sm">
           Finally, write a function that tests the inputs you generated with the
           user's template function vs your solution. If it passes all test
-          cases, this should only output "all to stdout. If it fails the first
+          cases, this should only output "all" to stdout. If it fails the first
           test, it should print 1, if it fails the second test, etc.
         </label>
 
@@ -134,7 +132,11 @@ void parser() {
             onChange={(value, event) => setTester(value?.split("\n") || [])}
             theme="vs-dark"
             defaultValue={`void testing() {
-  // code here
+  for (int i = 0; i < testCases.size(); i++) {
+    int n = testCases[i]
+    if (isNOdd(n) != solution(n)) { std::cout << i; }
+  }
+  std::cout << "all";
 }`}
             options={{
               fontSize: 14,
