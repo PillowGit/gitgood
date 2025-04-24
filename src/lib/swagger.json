@@ -487,9 +487,14 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "code"
+                  "code",
+                  "language"
                 ],
                 "properties": {
+                  "language": {
+                    "type": "string",
+                    "description": "The language the code is written in."
+                  },
                   "code": {
                     "type": "array",
                     "items": {
