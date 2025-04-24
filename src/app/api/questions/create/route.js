@@ -9,7 +9,7 @@ import {
   getBaseQuestionData,
   addQuestion
 } from "@/lib/database/questions";
-import { getUser } from "@/lib/database/users";
+import { getUser, updateUser } from "@/lib/database/users";
 
 /**
  * @openapi
@@ -237,12 +237,16 @@ export async function POST(req) {
 
     // Add question to database
     const addedQuestion = await addQuestion(questionData);
+    const newQid = addedQuestion.metadata.questionid;
+
+    const updatedCreated = Array.isArray(user.created)
+      ? [...new Set([...user.created, newQid])]
+      : [newQid];
+
+    await updateUser(github_id, { created: updatedCreated });
 
     // Return the question ID upon success
-    return NextResponse.json(
-      { questionId: addedQuestion.metadata.questionid },
-      { status: 201 }
-    );
+    return NextResponse.json({ questionId: newQid }, { status: 201 });
   } catch (e) {
     console.error("/api/questions/create server error:", e);
     return NextResponse.json({ error: e.message }, { status: 500 });
