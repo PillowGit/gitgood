@@ -4,7 +4,7 @@
  * @param {string[]} code - The lines of code to submit
  * @returns {Promise<{ redirect_to: string } | { error: string }>} - The submission id or an error message
  */
-async function proxySubmitSubmission(language, questionId, code) {
+async function proxySubmitQuestion(language, questionId, code) {
   try {
     const response = await fetch(`/api/questions/${questionId}/submit`, {
       cache: "no-store",
@@ -34,4 +34,34 @@ async function proxySubmitSubmission(language, questionId, code) {
   }
 }
 
-export { proxySubmitSubmission };
+/**
+ * @param {string} questionId - The id of the question to submit to
+ * @returns {Promise<{ submissions: SubmissionData[] } | { error: string }>} - The submission data or an error message
+ */
+async function proxyGetSubmissions(questionId) {
+  try {
+    const response = await fetch(
+      `/api/questions/${questionId}/my_submissions`,
+      {
+        cache: "no-store",
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { error: errorData.error || "Failed to get submissions" };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      error: `Caught client error while running proxy function: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    };
+  }
+}
+
+export { proxySubmitQuestion, proxyGetSubmissions };
