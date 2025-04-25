@@ -310,12 +310,12 @@ export default function UserProfile() {
           )}
 
           {/* Message when no challenges to display */}
-          {(!user.accepted || user.accepted.length === 0) && 
-           (!user.created || user.created.length === 0) && (
-            <div className="text-center py-10 bg-gray-800 rounded-xl">
-              <p className="text-gray-400">No challenges to display.</p>
-            </div>
-          )}
+          {(!user.accepted || user.accepted.length === 0) &&
+            (!user.created || user.created.length === 0) && (
+              <div className="text-center py-10 bg-gray-800 rounded-xl">
+                <p className="text-gray-400">No challenges to display.</p>
+              </div>
+            )}
         </div>
       </div>
     </div>
