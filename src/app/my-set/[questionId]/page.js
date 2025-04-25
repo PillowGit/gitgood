@@ -22,7 +22,34 @@ export default function EditPage({ params }) {
   const [title, setTitle] = useState("");
   const [difficultySum, setDifficultySum] = useState(5);
   const [displayPublicly, setDisplayPublicly] = useState(true);
-  const [tags, setTags] = useState({});
+  const [tags, setTags] = useState({
+    array: false,
+    string: false,
+    hash_table: false,
+    dp: false,
+    math: false,
+    sorting: false,
+    greedy: false,
+    dfs: false,
+    bfs: false,
+    binary_search: false,
+    matrix: false,
+    tree: false,
+    bit_manipulation: false,
+    two_pointer: false,
+    heap: false,
+    stack: false,
+    graph: false,
+    sliding_window: false,
+    back_tracking: false,
+    linked_list: false,
+    set: false,
+    queue: false,
+    memo: false,
+    recursion: false,
+    hashing: false,
+    bit_mask: false
+  });
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [codeLanguage, setCodeLanguage] = useState("");
@@ -52,12 +79,7 @@ export default function EditPage({ params }) {
         setTitle(data.metadata.title);
         setDifficultySum(data.metadata.difficulty_sum);
         setDisplayPublicly(data.metadata.display_publicly);
-        // tags is object of booleans?
-        const initialTags = {};
-        Object.keys(data.metadata.tags).forEach((tag) => {
-          initialTags[tag] = data.metadata.tags[tag];
-        });
-        setTags(initialTags);
+        setTags(data.metadata.tags);
         setLanguages(data.metadata.languages);
         setCodeLanguage(data.code.language);
         setInputs(data.code.inputs);
@@ -90,19 +112,26 @@ export default function EditPage({ params }) {
         title,
         difficulty_votes: question.metadata.difficulty_votes,
         difficulty_sum: difficultySum,
-        tags: Object.keys(tags).filter((t) => tags[t]),
+        difficulty: question.metadata.difficulty,
+        tags: tags,
         languages,
-        display_publicly: displayPublicly
+        display_publicly: displayPublicly,
+        votes_bad: question.metadata.votes_bad,
+        votes_good: question.metadata.votes_good,
+        votes_sum: question.metadata.votes_sum,
+        questionid: question.metadata.questionid,
+        author_id: question.metadata.author_id,
+        author_name: question.metadata.author_name,
+        date_created: question.metadata.date_created,
+        date_updated: question.metadata.date_updated
       },
-      code: [
-        {
-          language: codeLanguage,
-          inputs,
-          template: codeTemplate,
-          solution: codeSolution,
-          tester
-        }
-      ],
+      code: {
+        language: codeLanguage,
+        inputs,
+        template: codeTemplate,
+        solution: codeSolution,
+        tester
+      },
       test_cases: testCasesState
     };
 
