@@ -207,34 +207,6 @@ export default function UserProfile() {
                 </div>
               </div>
             </div>
-
-            {/* Completed Challenges */}
-            {user.accepted && user.accepted.length > 0 && (
-              <div className="bg-gray-800 rounded-xl p-6 mb-6">
-                <h2 className="text-xl font-semibold mb-4">Completed Challenges</h2>
-                <ul className="space-y-2">
-                  {user.accepted.map((challenge, index) => (
-                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
-                      {challenge}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Created Challenges */}
-            {user.created && user.created.length > 0 && (
-              <div className="bg-gray-800 rounded-xl p-6">
-                <h2 className="text-xl font-semibold mb-4">Created Challenges</h2>
-                <ul className="space-y-2">
-                  {user.created.map((challenge, index) => (
-                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
-                      {challenge}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
 
           {/* Right Column - Settings (only shown if it's the user's own profile) */}
@@ -299,6 +271,49 @@ export default function UserProfile() {
                   )}
                 </div>
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Row: Challenge Lists - Now stacked vertically */}
+        <div className="mt-6">
+          {/* Created Challenges - Now first/on top */}
+          {user.created && user.created.length > 0 && (
+            <div className="mb-6">
+              <div className="bg-gray-800 rounded-xl p-6">
+                <h2 className="text-xl font-semibold mb-4">Created Challenges</h2>
+                <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+                  {user.created.map((challenge, index) => (
+                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
+                      {challenge}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Completed Challenges - Now second/below */}
+          {user.accepted && user.accepted.length > 0 && (
+            <div>
+              <div className="bg-gray-800 rounded-xl p-6">
+                <h2 className="text-xl font-semibold mb-4">Completed Challenges</h2>
+                <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+                  {user.accepted.map((challenge, index) => (
+                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
+                      {challenge}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Message when no challenges to display */}
+          {(!user.accepted || user.accepted.length === 0) && 
+           (!user.created || user.created.length === 0) && (
+            <div className="text-center py-10 bg-gray-800 rounded-xl">
+              <p className="text-gray-400">No challenges to display.</p>
             </div>
           )}
         </div>
