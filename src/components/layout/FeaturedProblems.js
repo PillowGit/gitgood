@@ -9,16 +9,19 @@ export default function FeaturedProblems() {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
+      questionid: "x",
     },
     {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
+      questionid: "x",
     },
     {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
+      questionid: "x",
     },
   ]);
 
