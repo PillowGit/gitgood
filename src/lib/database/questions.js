@@ -102,14 +102,6 @@ function validateQuestionData(questionData) {
       return { status: false, reason: `Missing tag: ${key}` };
     }
   }
-  // Ensure all keys in every object in code are present
-  for (const codeobj of questionData.code) {
-    for (const key of Object.keys(fake_code_data)) {
-      if (codeobj[key] === undefined) {
-        return { status: false, reason: `Missing code object key: ${key}` };
-      }
-    }
-  }
   // Ensure all keys in every object in test_cases are present
   for (const test_case of questionData.test_cases) {
     if (!test_case["inputs"]) {
