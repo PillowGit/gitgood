@@ -172,7 +172,7 @@ export default function UserProfile() {
                     onClick={() => setIsEditingName(true)}
                     className="ml-2 text-sm bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
                   >
-                      {isSaving ? 'Saving...' : 'Edit'}
+                    {isSaving ? 'Saving...' : 'Edit'}
                   </button>
                 )
               )}
@@ -187,8 +187,8 @@ export default function UserProfile() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left Column - Stats */}
-          <div className="col-span-2">
+          {/* Left Column - Stats (expands to full width when not viewing own profile) */}
+          <div className={isOwnProfile ? "col-span-2" : "col-span-3"}>
             <div className="bg-gray-800 rounded-xl p-6 mb-6 flex flex-col min-h-[300px]">
               <h2 className="text-xl font-semibold mb-4">Challenge Stats</h2>
 
