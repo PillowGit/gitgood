@@ -8,9 +8,9 @@ async function getFeaturedQuestions() {
   // This is a placeholder for the real implementation
 
   const questions = [
-    await getQuestion("0QvyVG"),
-    await getQuestion("5dAfOe"),
-    await getQuestion("gs1PoS")
+    await getQuestion("Qo.Fmx"),
+    await getQuestion("_SI6aC"),
+    await getQuestion("xRRIFK")
   ];
 
   return questions.map((question) => question.metadata);
