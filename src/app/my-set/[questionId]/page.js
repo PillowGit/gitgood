@@ -73,8 +73,7 @@ export default function EditPage({ params }) {
     return (
       title.trim() &&
       description.trim() &&
-      codeTemplate.length > 0 &&
-      codeSolution.length > 0 &&
+      codeTemplate.length &&
       tester.length > 0 &&
       inputs.length > 0 &&
       languages.length > 0 &&
