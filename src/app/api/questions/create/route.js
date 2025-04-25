@@ -225,7 +225,7 @@ export async function POST(req) {
         difficulty:
           data.metadata.difficulty_sum / data.metadata.difficulty_votes
       },
-      code: [data.code], // Only one code object initially
+      code: data.code, // Only one code object initially
       test_cases: data.test_cases
     };
 
