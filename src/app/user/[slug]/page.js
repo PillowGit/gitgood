@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function UserProfile() {
   // Auth session
@@ -16,6 +17,10 @@ export default function UserProfile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // State for challenge details
+  const [challengeDetails, setChallengeTitles] = useState({});
+  const [loadingChallenges, setLoadingChallenges] = useState(false);
 
   // State for editable settings
   const [displayName, setDisplayName] = useState("");
@@ -57,6 +62,9 @@ export default function UserProfile() {
                 setIsOwnProfile(true);
               }
             }
+
+            // Fetch challenge details for accepted and created challenges
+            fetchChallengeDetails(data);
           }
           setLoading(false);
         })
@@ -66,6 +74,47 @@ export default function UserProfile() {
         });
     }
   }, [slug, session]);
+
+  // Fetch challenge details (titles) for all challenge IDs
+  const fetchChallengeDetails = async (userData) => {
+    const challengeIds = [
+      ...(userData.created || []),
+      ...(userData.accepted || [])
+    ];
+
+    if (challengeIds.length === 0) return;
+
+    setLoadingChallenges(true);
+    const details = {};
+
+    try {
+      // Fetch details for each challenge
+      const fetchPromises = challengeIds.map(async (id) => {
+        try {
+          const res = await fetch(`/api/questions/${id}`, { cache: "force-cache" });
+          if (res.ok) {
+            const data = await res.json();
+            return { id, title: data.metadata?.title || 'Untitled Challenge' };
+          }
+          return { id, title: 'Challenge Not Found' };
+        } catch (err) {
+          console.error(`Failed to fetch challenge ${id}:`, err);
+          return { id, title: 'Error Loading Challenge' };
+        }
+      });
+
+      const results = await Promise.all(fetchPromises);
+      results.forEach(({ id, title }) => {
+        details[id] = title;
+      });
+
+      setChallengeTitles(details);
+    } catch (err) {
+      console.error("Error fetching challenge details:", err);
+    } finally {
+      setLoadingChallenges(false);
+    }
+  };
 
   // Handle profile settings update
   const handleSaveSettings = async () => {
@@ -282,13 +331,19 @@ export default function UserProfile() {
             <div className="mb-6">
               <div className="bg-gray-800 rounded-xl p-6">
                 <h2 className="text-xl font-semibold mb-4">Created Challenges</h2>
-                <ul className="space-y-2 max-h-[400px] overflow-y-auto">
-                  {user.created.map((challenge, index) => (
-                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
-                      {challenge}
-                    </li>
-                  ))}
-                </ul>
+                {loadingChallenges ? (
+                  <p className="text-gray-400">Loading challenge details...</p>
+                ) : (
+                  <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+                    {user.created.map((challengeId, index) => (
+                      <li key={index} className="bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        <Link href={`/challenge/${challengeId}`} className="block w-full text-blue-400 hover:text-blue-300">
+                          {challengeDetails[challengeId] || challengeId}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           )}
@@ -298,13 +353,19 @@ export default function UserProfile() {
             <div>
               <div className="bg-gray-800 rounded-xl p-6">
                 <h2 className="text-xl font-semibold mb-4">Completed Challenges</h2>
-                <ul className="space-y-2 max-h-[400px] overflow-y-auto">
-                  {user.accepted.map((challenge, index) => (
-                    <li key={index} className="bg-gray-700 p-3 rounded-lg">
-                      {challenge}
-                    </li>
-                  ))}
-                </ul>
+                {loadingChallenges ? (
+                  <p className="text-gray-400">Loading challenge details...</p>
+                ) : (
+                  <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+                    {user.accepted.map((challengeId, index) => (
+                      <li key={index} className="bg-gray-700 p-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        <Link href={`/challenge/${challengeId}`} className="block w-full text-blue-400 hover:text-blue-300">
+                          {challengeDetails[challengeId] || challengeId}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           )}
