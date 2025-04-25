@@ -83,7 +83,7 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
-  const { questionId } = params;
+  const { questionId } = await params;
 
   if (!questionId) {
     return NextResponse.json(
