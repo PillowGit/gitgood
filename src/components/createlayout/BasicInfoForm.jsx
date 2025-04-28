@@ -2,6 +2,7 @@
 import { languageList } from "@/constants/languageList";
 
 export default function BasicInfoForm({
+  isEdit,
   title,
   setTitle,
   description,
@@ -53,51 +54,51 @@ export default function BasicInfoForm({
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="flex flex-col items-center">
-          <input
-            type="range"
-            min="0.1"
-            max="10"
-            step="0.1"
-            value={difficultySum}
-            onChange={e => setDifficultySum(parseFloat(e.target.value))}
-            className="w-full"
-          />
-          {editMode
-            ? <input
-                type="number"
-                step="0.1"
-                min="0.1"
-                max="10"
-                value={difficultySum}
-                onChange={e => {
-                  const val = parseFloat(e.target.value);
-                  setDifficultySum(
-                    isNaN(val)
-                      ? difficultySum
-                      : Math.min(10, Math.max(0.1, val))
-                  );
-                }}
-                onBlur={e => {
-                  const val = parseFloat(e.target.value);
-                  setDifficultySum(
-                    isNaN(val)
-                      ? difficultySum
-                      : Math.min(10, Math.max(0.1, val))
-                  );
-                  setEditMode(false);
-                }}
-                autoFocus
-                className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center"
-              />
-            : <div
-                className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center cursor-pointer"
-                onClick={() => setEditMode(true)}
-              >
-                {difficultySum.toFixed(1)}
-              </div>}
-        </div>
-
+        {!isEdit &&
+          <div className="flex flex-col items-center">
+            <input
+              type="range"
+              min="0.1"
+              max="10"
+              step="0.1"
+              value={difficultySum}
+              onChange={e => setDifficultySum(parseFloat(e.target.value))}
+              className="w-full"
+            />
+            {editMode
+              ? <input
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="10"
+                  value={difficultySum}
+                  onChange={e => {
+                    const val = parseFloat(e.target.value);
+                    setDifficultySum(
+                      isNaN(val)
+                        ? difficultySum
+                        : Math.min(10, Math.max(0.1, val))
+                    );
+                  }}
+                  onBlur={e => {
+                    const val = parseFloat(e.target.value);
+                    setDifficultySum(
+                      isNaN(val)
+                        ? difficultySum
+                        : Math.min(10, Math.max(0.1, val))
+                    );
+                    setEditMode(false);
+                  }}
+                  autoFocus
+                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center"
+                />
+              : <div
+                  className="mt-2 bg-[#333333] rounded px-3 py-1 w-16 text-center cursor-pointer"
+                  onClick={() => setEditMode(true)}
+                >
+                  {difficultySum.toFixed(1)}
+                </div>}
+          </div>}
         <div className="space-y-2">
           <label className="block text-xs text-center">
             Display Publicly?

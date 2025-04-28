@@ -200,6 +200,7 @@ async function deleteQuestion(questionId) {
     await deleteDoc(questionRef);
     const shortQuestionRef = doc(db, "questions-short", questionId);
     await deleteDoc(shortQuestionRef);
+    return { success: true };
   } catch (e) {
     console.log("Caught error while deleting question from database", e);
     return { error: e.message };
