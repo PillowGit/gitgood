@@ -57,7 +57,9 @@ export default function ClientComponent() {
     'Unknown/Unspecified': 'plaintext',
     'c++': 'cpp',
     'C++': 'cpp',
+    'python': 'python',
     'Python': 'python',
+    'python3': 'python',
     'Python3': 'python',
   }
   const [editorLanguage, setEditorLanguage] = useState("cpp");
