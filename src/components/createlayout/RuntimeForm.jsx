@@ -60,7 +60,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setInputs(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={inputs}
+            defaultValue={inputs.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -81,7 +81,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeTemplate(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={codeTemplate}
+            defaultValue={codeTemplate.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -102,7 +102,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeSolution(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={codeSolution}
+            defaultValue={codeSolution.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -127,7 +127,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setTester(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={tester}
+            defaultValue={tester.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },

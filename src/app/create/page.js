@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft } from "lucide-react";
 import BasicInfoForm from "@/components/createlayout/BasicInfoForm";
 import TestCasesForm from "@/components/createlayout/TestCasesForm";
 import RuntimeForm from "@/components/createlayout/RuntimeForm";
-import { useSession } from "next-auth/react"; // Or your auth method
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 /**
  * Helper function to map language names to editor identifiers.
@@ -54,7 +55,7 @@ export default function CreateQuestion() {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [codeTemplate, setCodeTemplate] = useState([
     "bool isNOdd(int n) {",
-    " // code ",
+    "\t// code ",
     "}"
   ]);
   const [inputs, setInputs] = useState([
@@ -62,19 +63,19 @@ export default function CreateQuestion() {
   ]);
   const [tester, setTester] = useState([
     "void testing() {",
-    " for (int i = 0; i < testCases.size(); i++) {",
-    " int n = testCases[i];",
-    " if (isNOdd(n) != solution(n)) { ",
-    " std::cout << i + 1; ",
-    " return;",
-    " }",
-    " }",
-    ' std::cout << "all";',
+    "\tfor (int i = 0; i < testCases.size(); i++) {",
+    "\t\tint n = testCases[i];",
+    "\t\tif (isNOdd(n) != solution(n)) { ",
+    "\t\t\tstd::cout << i + 1; ",
+    "\t\t\treturn;",
+    "\t\t}",
+    "\t}",
+    '\tstd::cout << "all";',
     "}"
   ]);
   const [codeSolution, setCodeSolution] = useState([
     "bool solution(int n) {",
-    " return n % 2;",
+    "\treturn n % 2;",
     "}"
   ]);
   const [testCases, setTestCases] = useState([
@@ -83,6 +84,13 @@ export default function CreateQuestion() {
   ]);
   const [activeTab, setActiveTab] = useState("basic-info");
   const [codeLanguage, setCodeLanguage] = useState("C++");
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timerId = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(timerId);
+  }, [cooldown]);
 
   const { data: session, status } = useSession();
   const isSignedIn = !!session;
@@ -138,6 +146,7 @@ export default function CreateQuestion() {
       if (response.ok) {
         alert("Question created successfully!");
         const createdQuestion = await response.json();
+        setCooldown(10);
       } else {
         const data = await response.json();
         alert(`Error: ${data.error}`);
@@ -152,7 +161,9 @@ export default function CreateQuestion() {
     <div className="min-h-screen bg-[#1e1e1e] text-white p-4 max-w-3xl mx-auto">
       <div className="mb-6 flex items-center gap-2">
         <ChevronLeft className="h-5 w-5" />
-        <span className="font-medium">My Creations</span>
+        <Link href="/my-set" className="font-medium">
+          My Creations
+        </Link>
       </div>
 
       <div className="flex mb-6 space-x-2">
@@ -194,6 +205,7 @@ export default function CreateQuestion() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {activeTab === "basic-info" && (
           <BasicInfoForm
+            isEdit={false}
             title={title}
             setTitle={setTitle}
             description={description}
@@ -237,15 +249,19 @@ export default function CreateQuestion() {
 
         <button
           type="submit"
-          disabled={!isFormValid()}
+          disabled={!isFormValid() || cooldown > 0}
           className={`w-full text-white py-3 px-4 rounded transition-colors
-    ${
-      isFormValid()
-        ? "bg-[#4a4a4a] hover:bg-[#5a5a5a]"
-        : "bg-[#1a1a1a] text-gray-500 cursor-not-allowed"
-    }`}
+            ${
+              isFormValid() && cooldown === 0
+                ? "bg-[#4a4a4a] hover:bg-[#5a5a5a]"
+                : "bg-[#1a1a1a] text-gray-500 cursor-not-allowed"
+            }`}
         >
-          Create Question
+          {!isSignedIn
+            ? `Sign in to Create a Question!`
+            : cooldown > 0
+            ? `Please wait ${cooldown}s`
+            : "Create Question"}
         </button>
       </form>
     </div>

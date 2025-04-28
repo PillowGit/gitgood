@@ -16,7 +16,7 @@ export default function MySet() {
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") {
-      router.push("/login");
+      setLoading(false);
       return;
     }
 
@@ -60,6 +60,35 @@ export default function MySet() {
     loadMyQuestions();
   }, [status, session, router]);
 
+  const handleDelete = async (qid) => {
+    if (!confirm("Are you sure you want to delete this question?")) return;
+    try {
+      const res = await fetch(`/api/questions/${qid}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Couldn’t delete question");
+      // remove from UI
+      setQuestions((qs) => qs.filter((q) => q.metadata.questionid !== qid));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#222222] text-white p-8">
+        <div className="text-center">
+          <p className="text-4xl font-bold mb-6">
+            Sign in to view the questions you&apos;ve created!
+          </p>
+          <Link href="/">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded">
+              Back to Home
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#222222] text-white p-8 px-14">
@@ -102,6 +131,12 @@ export default function MySet() {
                     Edit
                   </div>
                 </Link>
+                <button
+                  onClick={() => handleDelete(q.metadata.questionid)}
+                  className="inline-block bg-red-600 hover:bg-red-700 text-white py-1 px-3 ml-2 rounded"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}

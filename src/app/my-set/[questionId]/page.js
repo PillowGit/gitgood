@@ -184,6 +184,7 @@ export default function EditPage({ params }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {activeTab === "basic-info" && (
           <BasicInfoForm
+            isEdit={true}
             title={title}
             setTitle={setTitle}
             description={description}
