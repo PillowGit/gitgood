@@ -48,7 +48,6 @@ export default function ProblemEditor({
   }
 
   function submit() {
-    alert("Submitting code... Please wait.");
     setSubmitting(true);
     const lines = getLines();
     const lang = getLanguage(editorLanguage);
@@ -91,15 +90,17 @@ export default function ProblemEditor({
           {/* Submit */}
           <div className="flex gap-2">
             <button
-              className={ !session ?
+              className={!session ?
                 "font-bold py-2 px-4 rounded transition duration-150 ease-in-out bg-green-800 text-gray-400 cursor-not-allowed"
-                : "font-bold py-2 px-4 rounded transition duration-150 ease-in-out bg-green-600 hover:bg-green-500 text-white"
+                : submitting ?
+                  "font-bold py-2 px-4 rounded transition duration-150 ease-in-out bg-green-700 hover:bg-green-500 text-white cursor-wait"
+                  : "font-bold py-2 px-4 rounded transition duration-150 ease-in-out bg-green-600 hover:bg-green-500 text-white"
               }
               disabled={!session || submitting}
-              title={!session ? "Login to submit" : "Submit"}
+              title={!session ? "Login to submit" : submitting ? "Submitting..." : "Submit"}
               onClick={submit}
             >
-              {!session ? "Login to submit" : "Submit"}
+              {!session ? "Login to submit" : submitting ? "Submitting..." : "Submit"}
             </button>
           </div>
 
@@ -107,7 +108,7 @@ export default function ProblemEditor({
 
         {/* Editor */}
         <div className="flex-grow border border-gray-700 rounded-md overflow-hidden h-64 md:h-auto">
-          <Editor 
+          <Editor
             height="100%"
             language={editorLanguage}
             theme="vs-dark"
