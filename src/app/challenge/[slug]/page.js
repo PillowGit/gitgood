@@ -148,8 +148,23 @@ export default function ClientComponent() {
   return (
     <>
       <div className="flex flex-col md:flex-row min-h-screen bg-[#222222] text-gray-200 pt-16 md:pt-4">
-        <ProblemDescription questionData={questionData} tags={tags} difficulty={difficulty} language={lang} dates={dates} />
-        <ProblemEditor />
+        <ProblemDescription
+          questionData={questionData}
+          tags={tags}
+          difficulty={difficulty}
+          language={lang}
+          dates={dates}
+        />
+        <ProblemEditor
+          codeData={questionData?.code}
+          editorLanguage={editorLanguage}
+          setEditorLanguage={setEditorLanguage}
+          editorCode={editorCode}
+          setEditorCode={setEditorCode}
+          language_mappings={language_mappings}
+          session={session}
+          questionid={questionData?.metadata?.questionid}
+        />
       </div>
     </>
   )
