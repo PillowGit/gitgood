@@ -462,6 +462,89 @@
         }
       }
     },
+    "/api/questions/{questionId}/vote": {
+      "post": {
+        "summary": "Vote on a question",
+        "description": "Submit an upvote or downvote on a specific question",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "questionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the question to vote on"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "voteType"
+                ],
+                "properties": {
+                  "voteType": {
+                    "type": "string",
+                    "enum": [
+                      "up",
+                      "down"
+                    ],
+                    "description": "Type of vote (up or down)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vote recorded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "votes_good": {
+                      "type": "number",
+                      "description": "The new count of upvotes"
+                    },
+                    "votes_bad": {
+                      "type": "number",
+                      "description": "The new count of downvotes"
+                    },
+                    "votes_sum": {
+                      "type": "number",
+                      "description": "The new total of votes (upvotes - downvotes)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or missing required fields"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Question not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/api/questions/create": {
       "post": {
         "summary": "Create a new coding question.",
