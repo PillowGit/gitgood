@@ -83,9 +83,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeTemplate(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`bool isNOdd(int n) {
-  // code 
-}`}
+            defaultValue={codeTemplate.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -107,9 +105,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeSolution(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`bool solution(int n) {
-  return n % 2;
-}`}
+            defaultValue={codeSolution.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },

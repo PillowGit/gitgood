@@ -9,20 +9,20 @@ export default function FeaturedProblems() {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
-      questionid: "x",
+      questionid: "x"
     },
     {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
-      questionid: "x",
+      questionid: "x"
     },
     {
       title: "???",
       author: "Unknown",
       image: "/gray.png",
-      questionid: "x",
-    },
+      questionid: "x"
+    }
   ]);
 
   getFeaturedQuestions().then((questions) => {
