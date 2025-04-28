@@ -47,19 +47,21 @@ export default function ProblemEditor({
     return lines;
   }
 
-  async function submit() {
-    alert(editorLanguage);
+  function submit() {
+    alert("Submitting code... Please wait.");
     setSubmitting(true);
     const lines = getLines();
     const lang = getLanguage(editorLanguage);
-    const res = await proxySubmitQuestion(lang, questionid, lines);
-    if (res.error) {
-      console.error("Error submitting code: ", res.error);
-      alert(res.error);
-    } else {
-      alert("Code submitted successfully!");
+    proxySubmitQuestion(lang, questionid, lines).then((res) => {
       console.log(res);
-    }
+      if (res.error) {
+        console.error("Error submitting code: ", res.error);
+        alert(res.error);
+      } else {
+        window.location.href = res.redirect_to;
+      }
+      setSubmitting(false);
+    });
   }
 
   return (
