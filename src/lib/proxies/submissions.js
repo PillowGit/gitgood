@@ -18,7 +18,7 @@ async function proxySubmitQuestion(language, questionId, code) {
       }),
     });
 
-    if (!response.ok) {
+    if (response.status !== 302) {
       const errorData = await response.json();
       return { error: errorData.error || "Failed to submit submission" };
     }
