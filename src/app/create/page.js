@@ -52,10 +52,31 @@ export default function CreateQuestion() {
   });
   const [languages, setLanguages] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("");
-  const [codeTemplate, setCodeTemplate] = useState([]);
-  const [inputs, setInputs] = useState([]);
-  const [tester, setTester] = useState([]);
-  const [codeSolution, setCodeSolution] = useState([]);
+  const [codeTemplate, setCodeTemplate] = useState([
+    "bool isNOdd(int n) {",
+    " // code ",
+    "}"
+  ]);
+  const [inputs, setInputs] = useState([
+    "std::vector<int> testCases = {5, 10, 15, 20};"
+  ]);
+  const [tester, setTester] = useState([
+    "void testing() {",
+    " for (int i = 0; i < testCases.size(); i++) {",
+    " int n = testCases[i];",
+    " if (isNOdd(n) != solution(n)) { ",
+    " std::cout << i + 1; ",
+    " return;",
+    " }",
+    " }",
+    ' std::cout << "all";',
+    "}"
+  ]);
+  const [codeSolution, setCodeSolution] = useState([
+    "bool solution(int n) {",
+    " return n % 2;",
+    "}"
+  ]);
   const [testCases, setTestCases] = useState([
     { ANSWER: "15", inputs: { n: "5", arr: "[1, 2, 3, 4, 5]" } },
     { ANSWER: "1", inputs: { n: "1", arr: "[1]" } }
