@@ -61,7 +61,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setInputs(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`#include <vector>\n#include <iostream>\nstd::vector<int> testCases = {5, 10, 15, 20};`}
+            defaultValue={inputs.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -130,20 +130,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setTester(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`void testing() {
-  for (int i = 0; i < testCases.size(); i++) {
-    int n = testCases[i];
-    if (isNOdd(n) != solution(n)) { 
-      std::cout << n << " is wrong"; 
-      return;
-    }
-  }
-  std::cout << "all";
-}
-int main() {
-  testing();
-  return 0;
-}`}
+            defaultValue={tester.join("\n")}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
