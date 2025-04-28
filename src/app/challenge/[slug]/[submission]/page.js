@@ -3,7 +3,7 @@
 // Function imports
 import { proxyGetQuestion } from "@/lib/proxies/question";
 import { proxyGetSubmissions } from "@/lib/proxies/submissions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 // Component imports
@@ -38,6 +38,7 @@ function formatTimestamp(timestamp) {
 
 export default function Page() {
   const params = useParams();
+  const router = useRouter();
   const questionSlug = params?.slug;
   const currentSubmissionId = params?.submission;
 
@@ -93,6 +94,10 @@ export default function Page() {
     fetchData();
   }, [questionSlug, currentSubmissionId]);
 
+  function goBackToChallenge() {
+    router.push(`/challenge/${questionSlug}`);
+  }
+
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
   }
@@ -131,10 +136,18 @@ export default function Page() {
 
             {/* ===== Left Pane ===== */}
             <div className="w-full md:w-1/2 p-4 md:p-6 lg:p-8 overflow-y-auto border-r-0 md:border-r border-gray-700 flex flex-col">
-                {/* Question Title */}
-                <h1 className="text-xl lg:text-2xl font-bold mb-4 text-white flex-shrink-0">
-                    {questionTitle} - Submission Details
-                </h1>
+                <div className="flex justify-between items-center mb-4 flex-shrink-0">
+                    {/* Question Title */}
+                    <h1 className="text-xl lg:text-2xl font-bold mb-4 text-white flex-shrink-0">
+                        {questionTitle} - Submission Details
+                    </h1>
+                    <button
+                        onClick={goBackToChallenge}
+                        className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded transition duration-150 ease-in-out"
+                    >
+                        Back to Challenge
+                    </button>
+                </div>
 
                 {/* Submitted Code (Read-Only Editor) */}
                 <div className="mb-6 flex-shrink-0">
