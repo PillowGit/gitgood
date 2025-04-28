@@ -108,21 +108,26 @@ export async function POST(req, { params }) {
       { status: 400 }
     );
   }
-  const question_code_data = question.code;
+  let question_code_data = question.code;
   if (!question_code_data) {
     return NextResponse.json(
       { error: `Question with id "${questionId}" has no code data` },
       { status: 400 }
     );
   }
+
+  // TODO: Eventually fix this to be an array of objects
+  // For now we are accepting only one object to work with broken other route
   if (!Array.isArray(question_code_data)) {
-    return NextResponse.json(
-      { error: `Question with id "${questionId}" has invalid code data` },
-      { status: 400 }
-    );
+    question_code_data = [question_code_data];
+    // return NextResponse.json(
+    //   { error: `Question with id "${questionId}" has invalid code data` },
+    //   { status: 400 }
+    // );
   }
+
   const specific_code_data = question_code_data.filter(
-    (code_data) => code_data.language === data.language
+    (code_data) => code_data.language.toLowerCase() === data.language.toLowerCase()
   );
   if (specific_code_data.length === 0) {
     return NextResponse.json(
