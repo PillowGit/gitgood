@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 import {
   getQuestion,
@@ -113,8 +115,15 @@ export async function PUT(req, { params }) {
       { status: 404 }
     );
   }
+  const session = await getServerSession({ req, ...authOptions });
+  const githubId = session.user.image?.match(
+    /githubusercontent\.com\/u\/(\d+)/
+  )?.[1];
 
-  // Perform update
+  if (existing.metadata.author_id !== githubId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const result = await updateQuestion(questionId, updatedData);
     if (result?.error) {
