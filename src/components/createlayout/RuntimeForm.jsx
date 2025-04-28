@@ -60,7 +60,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setInputs(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`std::vector<int> testCases = {5, 10, 15, 20};`}
+            defaultValue={inputs}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -81,9 +81,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeTemplate(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`bool isNOdd(int n) {
-  // code 
-}`}
+            defaultValue={codeTemplate}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -104,9 +102,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setCodeSolution(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`bool solution(int n) {
-  return n % 2;
-}`}
+            defaultValue={codeSolution}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -131,16 +127,7 @@ function RuntimeForm({
             language={mapLanguage(codeLanguage)}
             onChange={(value, event) => setTester(value?.split("\n") || [])}
             theme="vs-dark"
-            defaultValue={`void testing() {
-  for (int i = 0; i < testCases.size(); i++) {
-    int n = testCases[i];
-    if (isNOdd(n) != solution(n)) { 
-      std::cout << i + 1; 
-      return;
-    }
-  }
-  std::cout << "all";
-}`}
+            defaultValue={tester}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
