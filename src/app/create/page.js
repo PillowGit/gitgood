@@ -59,6 +59,8 @@ export default function CreateQuestion() {
     "}"
   ]);
   const [inputs, setInputs] = useState([
+    "#include <vector>",
+    "#include <iostream>",
     "std::vector<int> testCases = {5, 10, 15, 20};"
   ]);
   const [tester, setTester] = useState([
@@ -66,11 +68,15 @@ export default function CreateQuestion() {
     "\tfor (int i = 0; i < testCases.size(); i++) {",
     "\t\tint n = testCases[i];",
     "\t\tif (isNOdd(n) != solution(n)) { ",
-    "\t\t\tstd::cout << i + 1; ",
+    '\t\t\tstd::cout << n << "is wrong"; ',
     "\t\t\treturn;",
     "\t\t}",
     "\t}",
     '\tstd::cout << "all";',
+    "}",
+    "int main() {",
+    "\ttesting();",
+    "\treturn 0;",
     "}"
   ]);
   const [codeSolution, setCodeSolution] = useState([
