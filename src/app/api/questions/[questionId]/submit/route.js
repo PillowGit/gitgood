@@ -127,7 +127,8 @@ export async function POST(req, { params }) {
   }
 
   const specific_code_data = question_code_data.filter(
-    (code_data) => code_data.language.toLowerCase() === data.language.toLowerCase()
+    (code_data) =>
+      code_data.language.toLowerCase() === data.language.toLowerCase()
   );
   if (specific_code_data.length === 0) {
     return NextResponse.json(
@@ -163,7 +164,7 @@ export async function POST(req, { params }) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      language: data.language,
+      language: data.language === "python" ? "python3" : data.language,
       version: "*",
       files: [{ content: combined_code }],
     }),
