@@ -3,8 +3,12 @@
 import TestCasesForm from "./TestCasesForm";
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
-export default function ProblemDescription({ questionData, tags, difficulty, language, dates }) {
+export default function ProblemDescription({ questionData, tags, difficulty, language, dates, onVote, userVote, votingInProgress, session }) {
+  const votesGood = questionData?.metadata?.votes_good || 0;
+  const votesBad = questionData?.metadata?.votes_bad || 0;
+
   return (
     <>
       <div className="w-full md:w-1/2 p-4 md:p-6 lg:p-8 overflow-y-auto border-r-0 md:border-r border-gray-700">
@@ -31,6 +35,60 @@ export default function ProblemDescription({ questionData, tags, difficulty, lan
               </span>
             ))
           }
+        </div>
+
+        {/* Voting Section */}
+        <div className="flex items-center mb-4 p-3 bg-[#2a2a2a] rounded-lg border border-gray-700">
+          <div className="flex-1">
+            <p className="font-medium text-sm text-gray-300">Community Rating:</p>
+            <div className="flex items-center mt-1">
+              <span className="text-[#1da568] font-medium">+{votesGood}</span>
+              <span className="mx-2 text-gray-500">|</span>
+              <span className="text-[#ce5545] font-medium">-{votesBad}</span>
+            </div>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => onVote && onVote(userVote === "up" ? "none" : "up")}
+              disabled={votingInProgress || !session}
+              title={!session
+                ? "Sign in to vote"
+                : userVote === "up"
+                  ? "Remove your upvote"
+                  : userVote === "down"
+                    ? "Change to upvote"
+                    : "Upvote this problem"
+              }
+              className={`p-2 rounded-full transition ${userVote === "up"
+                ? "bg-[#1f392a] text-[#1da568]"
+                : votingInProgress || !session
+                  ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-800 text-gray-300 hover:bg-[#1f392a] hover:text-[#1da568]"
+                }`}
+            >
+              <ThumbsUp className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => onVote && onVote(userVote === "down" ? "none" : "down")}
+              disabled={votingInProgress || !session}
+              title={!session
+                ? "Sign in to vote"
+                : userVote === "down"
+                  ? "Remove your downvote"
+                  : userVote === "up"
+                    ? "Change to downvote"
+                    : "Downvote this problem"
+              }
+              className={`p-2 rounded-full transition ${userVote === "down"
+                ? "bg-[#392a2a] text-[#ce5545]"
+                : votingInProgress || !session
+                  ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-800 text-gray-300 hover:bg-[#392a2a] hover:text-[#ce5545]"
+                }`}
+            >
+              <ThumbsDown className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Author, Dates, Language */}

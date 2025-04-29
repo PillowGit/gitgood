@@ -1,7 +1,7 @@
 "use client";
 
 // Function imports
-import { proxyGetQuestion } from "@/lib/proxies/question";
+import { proxyGetQuestion, proxyVoteQuestion } from "@/lib/proxies/question";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
@@ -46,11 +46,15 @@ export default function ClientComponent() {
   const { data: session } = useSession();
   const params = useParams();
   const slug = params?.slug;
-  
+
   // Page state data
   const [questionData, setQuestionData] = useState("Loading...");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Voting state
+  const [votingInProgress, setVotingInProgress] = useState(false);
+  const [userVote, setUserVote] = useState(null);
 
   // Editor state data
   const language_mappings = {
@@ -94,6 +98,7 @@ export default function ClientComponent() {
           const lang = res.code?.language || 'plaintext';
           setEditorLanguage(language_mappings[lang] || lang);
           setEditorCode((res.code?.template || []).join("\n") || `// Start coding here!`);
+          setUserVote(res.metadata?.userVote || null);
         }
       })
       .catch((err) => {
@@ -112,6 +117,39 @@ export default function ClientComponent() {
   }  
   function handleEditorChange(value, event) {
     setEditorCode(value);
+  }
+
+  // Voting logic
+  function handleVote(voteType) {
+    if (votingInProgress || !session || !questionData?.metadata?.questionid) return;
+
+    setVotingInProgress(true);
+    proxyVoteQuestion(questionData.metadata.questionid, voteType)
+      .then((res) => {
+        if (res.error) {
+          console.error("Error voting on question: ", res.error);
+          alert(`Failed to vote: ${res.error}`);
+        } else {
+          // Update the question data with the new vote counts
+          setQuestionData({
+            ...questionData,
+            metadata: {
+              ...questionData.metadata,
+              votes_good: res.votes_good,
+              votes_bad: res.votes_bad,
+              votes_sum: res.votes_sum
+            }
+          });
+          setUserVote(res.userVote);
+        }
+      })
+      .catch((err) => {
+        console.error("Error voting on question: ", err);
+        alert("Something went wrong while voting");
+      })
+      .finally(() => {
+        setVotingInProgress(false);
+      });
   }
 
   // Render Logic
@@ -156,6 +194,10 @@ export default function ClientComponent() {
           difficulty={difficulty}
           language={lang}
           dates={dates}
+          onVote={handleVote}
+          userVote={userVote}
+          votingInProgress={votingInProgress}
+          session={session}
         />
         <ProblemEditor
           codeData={questionData?.code}
