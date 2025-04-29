@@ -152,7 +152,7 @@ export default function Page() {
             </h1>
             <button
               onClick={goBackToChallenge}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded transition duration-150 ease-in-out"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-3 ml-4 py-1 rounded transition duration-150 ease-in-out"
             >
               Back to Challenge
             </button>
