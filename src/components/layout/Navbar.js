@@ -48,10 +48,10 @@ export default function Navbar() {
         <div className="hidden md:flex space-x-6">
           {/* Links visible on larger screens */}
           <Link
-            href="/problems"
+            href="/about-us"
             className="transition hover:scale-110 focus:scale-110"
           >
-            Problems
+            About us
           </Link>
           <Link
             href="/my-set"
@@ -123,8 +123,8 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-[#282828] flex flex-col items-center py-4 space-y-4">
-          <Link href="/problems" className="text-white">
-            Problems
+          <Link href="/about-us" className="text-white">
+            About us
           </Link>
           <Link href="/my-set" className="text-white">
             My Set
